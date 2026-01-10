@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who's Watching?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #141414; color: white; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+        .profile-card:hover .profile-img-container { border-color: white; }
+        .profile-card:hover .profile-name { color: white; }
+        .profile-img-container { border: 3px solid transparent; transition: border-color 0.2s; box-sizing: border-box; }
+        .profile-name { color: gray; transition: color 0.2s; }
+        .animate-pop { animation: pop 0.4s ease-out; }
+        @keyframes pop { 0% { opacity: 0; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
+    </style>
+</head>
+<body class="flex items-center justify-center h-screen w-full animate-pop">
+
+    <div class="text-center">
+        <h1 class="text-3xl md:text-5xl font-medium mb-8 md:mb-12 drop-shadow-lg">Who's Watching?</h1>
+        
+        <div class="flex gap-4 md:gap-8 justify-center">
+            
+            <a href="archive.html" class="profile-card group flex flex-col items-center gap-3 cursor-pointer text-decoration-none">
+                <div class="profile-img-container w-24 h-24 md:w-32 md:h-32 rounded-md overflow-hidden bg-zinc-800">
+                    <img src="https://pbs.twimg.com/media/G83U-wfaUAAVbh_?format=jpg&name=medium" 
+                         alt="HQ Archive Profile" 
+                         class="w-full h-full object-cover">
+                </div>
+                <span class="profile-name text-xs md:text-lg group-hover:text-white">HQ ARCHIVE</span>
+            </a>
+
+            <a href="wiki.html" class="profile-card group flex flex-col items-center gap-3 cursor-pointer text-decoration-none">
+                <div class="profile-img-container w-24 h-24 md:w-32 md:h-32 rounded-md overflow-hidden bg-zinc-800">
+                    <img src="https://news.nateimg.co.kr/orgImg/jn/2025/06/02/8ee3bb5c81a451.jpg" 
+                         alt="NF Wiki Profile" 
+                         class="w-full h-full object-cover">
+                </div>
+                <span class="profile-name text-xs md:text-lg group-hover:text-white">NF WIKI</span>
+            </a>
+        </div>
+        
+        </div>
+
+</body>
+</html>
