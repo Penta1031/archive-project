@@ -1,7 +1,7 @@
 // ============================================================================
 // ⚙️ 설정 및 데이터 정의 (사용자 정의 규칙)
 // ============================================================================
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxiBXO10uVxiwhwVZxCncv0LgyRnmCCChVwMRCy6wyoLRqMQ8-qY2vA22DLv3IN1TA9/exec'; 
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwtNgxVvbew4bDfAw0ALpwAsgI5lp6p8Tvy_D7MWRXh-kluSI8C4kwCiSXA_p4uBXYi/exec'; 
 
 // [신규] 썸네일 없을 때 사용할 기본 이미지 (어두운 배경 + 재생버튼)
 const DEFAULT_THUMBNAIL = 'https://placehold.co/600x400/1a1a1a/333333?text=%E2%96%B6';
@@ -79,7 +79,12 @@ window.onload = async () => {
 async function fetchData() {
     try {
         const response = await fetch(GAS_URL);
-        const rawJson = await response.json();
+        const responseData = await response.json(); // 1. 일단 전체 응답을 받습니다.
+        
+        // ✨ [핵심 수정 부분] 
+        // 응답 안에 'data'라는 상자가 있으면 꺼내 쓰고(새 방식), 
+        // 없으면 그냥 씁니다(옛날 방식 - 안전장치).
+        const rawJson = responseData.data ? responseData.data : responseData;
         
         allData = rawJson.map(item => {
             const link = item['링크'] || item['link'] || '';
