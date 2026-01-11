@@ -150,13 +150,13 @@
         </section>
 
         <section id="calendar-view" class="hidden animate-fade-in">
-            <div class="flex items-center justify-between mb-6 max-w-4xl mx-auto">
+            <div class="flex items-center justify-between mb-6 max-w-4xl mx-auto w-full">
                 <button id="prev-month-btn" class="p-2 text-gray-400 hover:text-white"><i class="fas fa-chevron-left text-xl"></i></button>
                 <h2 id="calendar-title" class="text-2xl font-bold text-white"></h2>
                 <button id="next-month-btn" class="p-2 text-gray-400 hover:text-white"><i class="fas fa-chevron-right text-xl"></i></button>
             </div>
 
-            <div class="grid grid-cols-7 text-center mb-2 max-w-4xl mx-auto text-sm font-bold text-gray-500">
+            <div class="grid grid-cols-7 gap-1 md:gap-2 text-center mb-2 max-w-4xl mx-auto w-full text-sm font-bold text-gray-500">
                 <div class="text-red-500">SUN</div>
                 <div>MON</div>
                 <div>TUE</div>
@@ -166,10 +166,9 @@
                 <div class="text-blue-500">SAT</div>
             </div>
 
-            <div id="calendar-grid" class="grid grid-cols-7 gap-1 md:gap-2 max-w-4xl mx-auto mb-8"></div>
+            <div id="calendar-grid" class="grid grid-cols-7 gap-1 md:gap-2 max-w-4xl mx-auto w-full mb-8"></div>
             
-            <div class="max-w-4xl mx-auto">
-                <h3 id="calendar-list-title" class="text-lg font-bold text-red-500 mb-4 px-2 border-l-4 border-red-500"></h3>
+            <div class="max-w-4xl mx-auto w-full"> <h3 id="calendar-list-title" class="text-lg font-bold text-red-500 mb-4 px-2 border-l-4 border-red-500"></h3>
                 <div id="calendar-content-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 </div>
             </div>
