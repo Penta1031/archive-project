@@ -126,7 +126,7 @@ function generateChannelButtons(filteredByType) {
     
     container.innerHTML = channels.map(val => {
         const isActive = val === currentFilters.channel;
-        return `<button class="px-4 py-2 rounded-full text-sm font-bold transition ${isActive ? 'bg-[#2a2a2a] text-white border border-gray-500' : 'text-gray-400 hover:text-white hover:bg-[#2a2a2a]'}">${val}</button>`;
+        return `<button class="px-4 py-2 rounded-full text-sm font-bold transition whitespace-nowrap flex-shrink-0 ${isActive ? 'bg-[#2a2a2a] text-white border border-gray-500' : 'text-gray-400 hover:text-white hover:bg-[#2a2a2a]'}">${val}</button>`;
     }).join('');
     
     container.querySelectorAll('button').forEach(btn => {

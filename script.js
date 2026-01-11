@@ -138,7 +138,7 @@ async function fetchData() {
         }).filter(item => item.title !== '제목 없음'); 
 
         renderTop10();
-        switchMainTab('archive'); // 초기 탭
+        switchMainTab('must-read'); // 초기 탭
 
     } catch (error) {
         console.error("데이터 로드 실패:", error);
@@ -225,7 +225,7 @@ function renderSubGroups() {
     }
 
     let html = `
-        <button class="px-4 py-2 rounded-full text-sm font-bold transition ${currentSubGroup === 'All' ? 'bg-[#2a2a2a] text-white border border-gray-500' : 'text-gray-400 hover:text-white hover:bg-[#2a2a2a]'}"
+        <button class="px-4 py-2 rounded-full text-sm font-bold transition whitespace-nowrap flex-shrink-0 ${currentSubGroup === 'All' ? 'bg-[#2a2a2a] text-white border border-gray-500' : 'text-gray-400 hover:text-white hover:bg-[#2a2a2a]'}"
             onclick="setSubGroup('All')">
             전체 보기
         </button>
@@ -234,7 +234,7 @@ function renderSubGroups() {
     groups.forEach(group => {
         const isActive = currentSubGroup === group;
         html += `
-            <button class="px-4 py-2 rounded-full text-sm font-bold transition ${isActive ? 'bg-[#2a2a2a] text-white border border-gray-500' : 'text-gray-400 hover:text-white hover:bg-[#2a2a2a]'}"
+            <button class="px-4 py-2 rounded-full text-sm font-bold transition whitespace-nowrap flex-shrink-0 ${isActive ? 'bg-[#2a2a2a] text-white border border-gray-500' : 'text-gray-400 hover:text-white hover:bg-[#2a2a2a]'}"
                 onclick="setSubGroup('${group}')">
                 ${group}
             </button>
