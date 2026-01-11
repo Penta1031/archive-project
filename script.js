@@ -469,26 +469,38 @@ function renderCalendar() {
     const firstDay = new Date(year, month, 1).getDay();
     const lastDate = new Date(year, month + 1, 0).getDate();
     
-    // 빈 칸 채우기
-    for(let i=0; i<firstDay; i++) grid.innerHTML += `<div></div>`;
+    // 빈 칸 채우기 (투명하게 처리)
+    for(let i=0; i<firstDay; i++) grid.innerHTML += `<div class="aspect-square"></div>`;
     
     // 날짜 채우기
     for(let i=1; i<=lastDate; i++) {
         const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
         const dayItems = allData.filter(d => d.date === dateStr);
         const hasData = dayItems.length > 0;
-        const isToday = new Date().toISOString().slice(0,10) === dateStr;
         
+        // 오늘 날짜인지 확인 (한국 시간 기준 간략 비교)
+        const today = new Date();
+        const isToday = (today.getFullYear() === year && today.getMonth() === month && today.getDate() === i);
+        
+        // [디자인 변경 핵심]
+        // 1. border, bg-[#1a1a1a] 제거 -> 배경 투명
+        // 2. flex-col items-center -> 숫자와 점을 가운데 정렬
+        // 3. hover 효과를 부드러운 원형이나 사각형 배경으로 변경
         const html = `
-            <div class="calendar-cell min-h-[60px] md:min-h-[100px] border border-gray-800 bg-[#1a1a1a] rounded p-1 md:p-2 relative hover:bg-gray-800 transition cursor-pointer"
+            <div class="calendar-cell aspect-square flex flex-col items-center justify-start pt-2 rounded-lg cursor-pointer transition duration-200 hover:bg-white/10 relative group"
                  onclick="filterByDate('${dateStr}', this)">
-                <div class="text-xs md:text-sm font-bold ${isToday ? 'text-red-500' : 'text-gray-400'}">${i}</div>
+                 
+                <div class="w-7 h-7 flex items-center justify-center rounded-full text-sm md:text-base font-bold mb-1 
+                    ${isToday ? 'bg-red-600 text-white shadow-md' : 'text-gray-300 group-hover:text-white'}">
+                    ${i}
+                </div>
+
                 ${hasData ? `
-                    <div class="mt-1 flex flex-wrap gap-1">
-                        ${dayItems.slice(0, 3).map(() => `<div class="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-red-600/80"></div>`).join('')}
-                        ${dayItems.length > 3 ? `<span class="text-[8px] text-gray-500">+</span>` : ''}
+                    <div class="flex gap-1 justify-center">
+                        <div class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-sm"></div>
+                        ${dayItems.length > 1 ? `<div class="w-1.5 h-1.5 rounded-full bg-gray-500 opacity-70"></div>` : ''}
                     </div>
-                ` : ''}
+                ` : '<div class="h-1.5"></div>'} 
             </div>
         `;
         grid.innerHTML += html;
@@ -503,14 +515,14 @@ function renderCalendar() {
 }
 
 function filterByDate(dateStr, element) {
+    // 모든 셀의 선택 스타일 초기화
     document.querySelectorAll('.calendar-cell').forEach(cell => {
-        cell.classList.remove('border-red-500', 'bg-gray-800');
-        cell.classList.add('border-gray-800', 'bg-[#1a1a1a]');
+        cell.classList.remove('bg-gray-800', 'ring-1', 'ring-gray-600'); 
     });
     
+    // 선택된 셀 스타일 적용 (배경색 어둡게 + 은은한 테두리)
     if (element) {
-        element.classList.remove('border-gray-800', 'bg-[#1a1a1a]');
-        element.classList.add('border-red-500', 'bg-gray-800');
+        element.classList.add('bg-gray-800', 'ring-1', 'ring-gray-600');
     }
 
     const dailyData = allData.filter(item => item.date === dateStr);
@@ -547,7 +559,9 @@ function renderCalendarList(dataList, titleText) {
                     <span class="text-[10px] font-bold text-red-500 border border-red-500/50 px-1.5 py-0.5 rounded truncate max-w-[70%]">${item.category}</span>
                     <span class="text-[10px] text-gray-500">${item.date}</span>
                 </div>
-                <h3 class="text-sm font-bold text-gray-200 line-clamp-2 leading-snug group-hover:text-white transition">${item.title}</h3>
+                
+                <h3 class="text-xs md:text-sm font-bold text-gray-200 line-clamp-2 leading-snug group-hover:text-white transition">${item.title}</h3>
+            
             </div>
         </div>
     `).join('');
