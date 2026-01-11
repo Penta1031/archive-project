@@ -1,7 +1,7 @@
 // ============================================================================
 // ⚙️ 설정 및 데이터 정의 (사용자 정의 규칙)
 // ============================================================================
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwpj0iWlUh6GR8JQCuA7hLAp9ZVYrv0nq5B4ZMkQSMc2fwt1LBo1tLOuyIF2dLkT3ay/exec'; 
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxiBXO10uVxiwhwVZxCncv0LgyRnmCCChVwMRCy6wyoLRqMQ8-qY2vA22DLv3IN1TA9/exec'; 
 
 // [신규] 썸네일 없을 때 사용할 기본 이미지 (어두운 배경 + 재생버튼)
 const DEFAULT_THUMBNAIL = 'https://placehold.co/600x400/1a1a1a/333333?text=%E2%96%B6';
