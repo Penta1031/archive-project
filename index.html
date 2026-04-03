@@ -1,47 +1,1106 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Who's Watching?</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background-color: #141414; color: white; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
-        .profile-card:hover .profile-img-container { border-color: white; }
-        .profile-card:hover .profile-name { color: white; }
-        .profile-img-container { border: 3px solid transparent; transition: border-color 0.2s; box-sizing: border-box; }
-        .profile-name { color: gray; transition: color 0.2s; }
-        .animate-pop { animation: pop 0.4s ease-out; }
-        @keyframes pop { 0% { opacity: 0; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HQ ARCHIVE</title>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #111; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+    
+    .dropdown-animate {
+      animation: dropdown-in 0.2s ease-out;
+      transform-origin: top;
+    }
+    @keyframes dropdown-in {
+      from { opacity: 0; transform: scaleY(0.95); }
+      to { opacity: 1; transform: scaleY(1); }
+    }
+
+    .loading-spin {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* 다크 모드 캘린더 아이콘 및 팝업 스타일 적용 */
+    input[type="date"] {
+      color-scheme: dark;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator:hover {
+      opacity: 1;
+    }
+  </style>
 </head>
-<body class="flex items-center justify-center h-screen w-full animate-pop">
+<body class="min-h-screen bg-[#0f0f0f] text-white font-sans flex justify-center selection:bg-red-500/30">
+  
+  <div class="w-full max-w-[480px] bg-[#111111] min-h-screen relative shadow-2xl overflow-x-hidden border-x border-neutral-800/50 flex flex-col">
+    
+    <a href="https://hq-record.netlify.app/" target="_blank" class="w-full py-2.5 bg-red-600/10 border-b border-red-500/20 flex items-center justify-center gap-2 hover:bg-red-600/20 transition-all active:scale-[0.98] group shrink-0">
+      <i data-lucide="home" class="w-3.5 h-3.5 text-red-500"></i>
+      <span id="top-home-text" class="text-red-500 font-bold text-[11px] tracking-tight"></span>
+    </a>
 
-    <div class="text-center">
-        <h1 class="text-3xl md:text-5xl font-medium mb-8 md:mb-12 drop-shadow-lg">Who's Watching?</h1>
-        
-        <div class="flex gap-4 md:gap-8 justify-center">
-            
-            <a href="archive.html" class="profile-card group flex flex-col items-center gap-3 cursor-pointer text-decoration-none">
-                <div class="profile-img-container w-24 h-24 md:w-32 md:h-32 rounded-md overflow-hidden bg-zinc-800">
-                    <img src="https://pbs.twimg.com/media/G83U-wfaUAAVbh_?format=jpg&name=medium" 
-                         alt="HQ Archive Profile" 
-                         class="w-full h-full object-cover">
-                </div>
-                <span class="profile-name text-xs md:text-lg group-hover:text-white">HQ ARCHIVE</span>
-            </a>
-
-            <a href="wiki.html" class="profile-card group flex flex-col items-center gap-3 cursor-pointer text-decoration-none">
-                <div class="profile-img-container w-24 h-24 md:w-32 md:h-32 rounded-md overflow-hidden bg-zinc-800">
-                    <img src="https://news.nateimg.co.kr/orgImg/jn/2025/06/02/8ee3bb5c81a451.jpg" 
-                         alt="NF Wiki Profile" 
-                         class="w-full h-full object-cover">
-                </div>
-                <span class="profile-name text-xs md:text-lg group-hover:text-white">NF WIKI</span>
-            </a>
+    <header class="px-4 py-4 sticky top-0 bg-[#111111] z-40 border-b border-neutral-800 shrink-0">
+      <div class="flex justify-between items-center mb-4">
+        <h1 class="text-red-600 font-black text-2xl tracking-tighter cursor-pointer" onclick="location.reload()">HQ ARCHIVE</h1>
+        <div class="flex items-center gap-2">
+          <div class="flex bg-neutral-900 rounded-lg p-0.5 border border-neutral-800 mr-1">
+            <button onclick="setLanguage('ko')" id="lang-ko" class="px-1.5 py-1 text-[9px] font-bold rounded transition-colors">KO</button>
+            <button onclick="setLanguage('en')" id="lang-en" class="px-1.5 py-1 text-[9px] font-bold rounded transition-colors">EN</button>
+            <button onclick="setLanguage('cn')" id="lang-cn" class="px-1.5 py-1 text-[9px] font-bold rounded transition-colors">CN</button>
+            <button onclick="setLanguage('jp')" id="lang-jp" class="px-1.5 py-1 text-[9px] font-bold rounded transition-colors">JP</button>
+          </div>
+          <div id="admin-toggle-btn" onclick="toggleAdminMode()" class="cursor-pointer transition-colors p-1 hover:bg-neutral-800 rounded-lg text-gray-400"></div>
         </div>
-        
-        </div>
+      </div>
 
+      <div id="search-container" class="relative mb-2 transition-all">
+        <div class="relative">
+          <i data-lucide="search" class="w-[18px] h-[18px] absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+          <input 
+            id="search-input"
+            type="text" 
+            placeholder="검색어를 입력하세요" 
+            oninput="handleSearch(event)"
+            class="w-full bg-[#1e1e1e] border border-neutral-800 text-white pl-10 pr-4 py-2.5 rounded-full text-sm focus:outline-none focus:border-neutral-600 transition-colors"
+          />
+        </div>
+        <div id="search-hint" class="text-[11px] text-gray-500 mt-2 px-2"></div>
+      </div>
+    </header>
+
+    <nav id="main-tabs" class="flex px-4 overflow-x-auto scrollbar-hide border-b border-neutral-800 bg-[#111111] shrink-0"></nav>
+    <main id="content-area" class="p-4 pb-20 flex-1 overflow-y-auto custom-scrollbar relative"></main>
+
+  </div>
+
+  <script>
+    // 💡 Apps Script 배포 URL
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyVg2Dr7RQJpSVG10mXiwc9ecKs2t3K8hIqZ0AUw_D6dqGCENqhJEOvsQk0C6YXkDM1/exec"; 
+
+    // Contents 시트 (메인 데이터) CSV 링크
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vRC80s5f91fT_g0tIDmNTTGbhihJqxC6VeNQ643GjbeVB25_-ycP0Tj-uhaz3d4cqOVkjU829dO8TT3/pub?gid=0&single=true&output=csv`;
+    
+    // Raw Contents 시트 (불러오기 데이터) CSV 링크
+    const RAW_SHEET_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vRC80s5f91fT_g0tIDmNTTGbhihJqxC6VeNQ643GjbeVB25_-ycP0Tj-uhaz3d4cqOVkjU829dO8TT3/pub?gid=74517521&single=true&output=csv`;
+
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+    // ✅ 최종 이미지 데이터 기반 카테고리 업데이트
+    const CATEGORIES = {
+      '무대영상': ['음악방송', '직캠', '콘서트', '페스티벌', '대학축제', '버스킹', '쇼케이스', '팬미팅', '팬싸인회', '공항/퇴근길', '해외투어', '킹덤'],
+      '라이브': ['하루의 마무리', '승협이 라이브', '승구리당당', '우리 얘기 좀 합시다', '개인 라이브', '단체 라이브', '인스타그램 라이브', '기타 라이브'],
+      '유튜브': ['뮤직비디오', '메이킹', '비하인드', '레코딩로그', '승캠', '승협이', '합주일지', '커버곡', '스페셜클립', '쇼츠', '엔킷리스트', '버킷리스트'],
+      '미디어': ['방송/예능', '라디오', '인터뷰', '잡지/화보', '웹예능/웹컨텐츠'],
+      'SNS': ['공식 트위터', '개인 인스타그램', '공식 인스타그램', '릴스', '틱톡', '공식 카페', '공식 블로그'],
+      '메시지': ['버블', '프롬'],
+      '기타': ['연말결산', '기타', '백업']
+    };
+
+    const MAIN_TABS_LIST = ['전체 보기', ...Object.keys(CATEGORIES)];
+    
+    // ✅ 최종 이미지 데이터 기반 키워드 업데이트
+    const KEYWORDS = ['모음집', '이마키스', '질투', '친지마', '투샷', '셀카', '하크잖', '커플템'];
+
+    const TRANSLATIONS = {
+      ko: {
+        archive: "아카이브", keyword: "키워드", calendar: "캘린더",
+        listAdmin: "리스트 관리", calAdmin: "캘린더 관리", importAdmin: "불러오기",
+        searchPlaceholder: "검색어를 입력하세요", searchHint: "💡 추천 검색: 2023-05-22, ㅇㅇㅎ, 하크잖",
+        all: "전체", total: "전체", unit: "개", more: "더보기 (+)", latest: "최신순", oldest: "과거순",
+        empty: "기록이 없습니다.", add: "+ 추가", save: "저장하기", cancel: "취소", edit: "수정", delete: "삭제",
+        year: "년", month: "월", daySun: "일", dayMon: "월", dayTue: "화", dayWed: "수", dayThu: "목", dayFri: "금", daySat: "토",
+        importTitle: "외부 데이터 관리", importId: "계정 필터링 (선택사항)", importStart: "시작 날짜", importEnd: "종료 날짜", importBtn: "Raw 데이터 조회하기",
+        postBtn: "게시하기", extract: "추출", landingLink: "랜딩 링크", thumbUrl: "썸네일 URL", title: "제목", date: "날짜", mainCat: "대분류", subCat: "소분류", keywordCat: "키워드",
+        passwordTitle: "관리자 인증", passwordPlaceholder: "비밀번호를 입력하세요", passwordBtn: "확인", passwordError: "비밀번호가 틀렸습니다.",
+        goToMain: "메인 홈페이지로 이동",
+        categories: {
+          '무대영상': '무대영상', '라이브': '라이브', '유튜브': '유튜브', '미디어': '미디어', 'SNS': 'SNS', '메시지': '메시지', '기타': '기타', '전체 보기': '전체 보기',
+          '음악방송': '음악방송', '직캠': '직캠', '콘서트': '콘서트', '페스티벌': '페스티벌', '대학축제': '대학축제', '버스킹': '버스킹', '쇼케이스': '쇼케이스', '팬미팅': '팬미팅', '팬싸인회': '팬싸인회', '공항/퇴근길': '공항/퇴근길', '해외투어': '해외투어', '킹덤': '킹덤',
+          '하루의 마무리': '하루의 마무리', '승협이 라이브': '승협이 라이브', '승구리당당': '승구리당당', '우리 얘기 좀 합시다': '우리 얘기 좀 합시다', '개인 라이브': '개인 라이브', '단체 라이브': '단체 라이브', '인스타그램 라이브': '인스타그램 라이브', '기타 라이브': '기타 라이브',
+          '뮤직비디오': '뮤직비디오', '메이킹': '메이킹', '비하인드': '비하인드', '레코딩로그': '레코딩로그', '승캠': '승캠', '승협이': '승협이', '합주일지': '합주일지', '커버곡': '커버곡', '스페셜클립': '스페셜클립', '쇼츠': '쇼츠', '엔킷리스트': '엔피아 모집', '버킷리스트': '버킷리스트',
+          '방송/예능': '방송/예능', '라디오': '라디오', '인터뷰': '인터뷰', '잡지/화보': '잡지/화보', '웹예능/웹컨텐츠': '웹예능/웹컨텐츠',
+          '공식 트위터': '공식 트위터', '개인 인스타그램': '개인 인스타그램', '공식 인스타그램': '공식 인스타그램', '릴스': '릴스', '틱톡': '틱톡', '공식 카페': '공식 카페', '공식 블로그': '공식 블로그',
+          '버블': '버블', '프롬': '프롬', '연말결산': '연말결산', '백업': '백업',
+          '모음집': '모음집', '이마키스': '이마키스', '질투': '질투', '친지마': '친지마', '투샷': '투샷', '셀카': '셀카', '하크잖': '하크잖', '커플템': '커플템'
+        }
+      },
+      en: {
+        archive: "Archive", keyword: "Keyword", calendar: "Calendar",
+        listAdmin: "List", calAdmin: "Calendar", importAdmin: "Import",
+        searchPlaceholder: "Search...", searchHint: "💡 Try: 2023-05-22, Fancam, Music",
+        all: "All", total: "Total", unit: "items", more: "Load More (+)", latest: "Latest", oldest: "Oldest",
+        empty: "No records found.", add: "+ Add", save: "Save", cancel: "Cancel", edit: "Edit", delete: "Delete",
+        year: "", month: "", daySun: "SUN", dayMon: "MON", dayTue: "TUE", dayWed: "WED", dayThu: "THU", dayFri: "FRI", daySat: "SAT",
+        importTitle: "Manage External Data", importId: "Account Filter (Optional)", importStart: "Start Date", importEnd: "End Date", importBtn: "Fetch Raw Data",
+        postBtn: "Publish", extract: "Extract", landingLink: "Landing Link", thumbUrl: "Thumbnail URL", title: "Title", date: "Date", mainCat: "Main Cat", subCat: "Sub Cat", keywordCat: "Keyword",
+        passwordTitle: "Admin Auth", passwordPlaceholder: "Enter password", passwordBtn: "Confirm", passwordError: "Incorrect password.",
+        goToMain: "Back to Home",
+        categories: {
+          '무대영상': 'Performance', '라이브': 'Live', '유튜브': 'YouTube', '미디어': 'Media', 'SNS': 'SNS', '메시지': 'Message', '기타': 'ETC', '전체 보기': 'View All',
+          '음악방송': 'Music Show', '직캠': 'Fancam', '콘서트': 'Concert', '페스티벌': 'Festival', '대학축제': 'Univ Festival', '버스킹': 'Busking', '쇼케이스': 'Showcase', '팬미팅': 'Fanmeeting', '팬싸인회': 'Fansign', '공항/퇴근길': 'Airport/Exit', '해외투어': 'World Tour', '킹덤': 'Kingdom',
+          '하루의 마무리': 'End of Day', '승협이 라이브': 'Seunghyub Live', '승구리당당': 'Seungguri', '우리 얘기 좀 합시다': 'Lets Talk', '개인 라이브': 'Solo Live', '단체 라이브': 'Group Live', '인스타그램 라이브': 'Insta Live', '기타 라이브': 'Other Live',
+          '뮤직비디오': 'Music Video', '메이킹': 'Making', '비하인드': 'Behind', '레코딩로그': 'Recording Log', '승캠': 'Seung-Cam', '승협이': 'Seunghyub', '합주일지': 'Ensemble Log', '커버곡': 'Covers', '스페셜클립': 'Special Clips', '쇼츠': 'Shorts', '엔킷리스트': 'N.Fia Recruit', '버킷리스트': 'Bucket List',
+          '방송/예능': 'TV Show', '라디오': 'Radio', '인터뷰': 'Interview', '잡지/화보': 'Magazine/Pictorial', '웹예능/웹컨텐츠': 'Web Content',
+          '공식 트위터': 'Official Twitter', '개인 인스타그램': 'Personal IG', '공식 인스타그램': 'Official IG', '릴스': 'Reels', '틱톡': 'TikTok', '공식 카페': 'Fan Cafe', '공식 블로그': 'Official Blog',
+          '버블': 'Bubble', '프롬': 'Fromm', '연말결산': 'Year-end', '백업': 'Backup',
+          '모음집': 'Collection', '이마키스': 'Forehead Kiss', '질투': 'Jealousy', '친지마': 'Chinjima', '투샷': 'Two-shot', '셀카': 'Selfie', '하크잖': 'Heart', '커플템': 'Matching'
+        }
+      },
+      cn: {
+        archive: "存档", keyword: "关键词", calendar: "日历",
+        listAdmin: "列表", calAdmin: "日历", importAdmin: "导入",
+        searchPlaceholder: "搜索...", searchHint: "💡 建议: 2023-05-22, 舞台, 视频",
+        all: "全部", total: "共", unit: "个", more: "加载更多 (+)", latest: "最新", oldest: "最早",
+        empty: "暂无记录。", add: "+ 添加", save: "保存", cancel: "取消", edit: "编辑", delete: "删除",
+        year: "年", month: "月", daySun: "日", dayMon: "一", dayTue: "二", dayWed: "三", dayThu: "四", dayFri: "五", daySat: "六",
+        importTitle: "管理外部数据", importId: "账号过滤 (可选)", importStart: "开始日期", importEnd: "结束日期", importBtn: "获取Raw数据",
+        postBtn: "发布", extract: "提取", landingLink: "着陆链接", thumbUrl: "缩略图 URL", title: "标题", date: "日期", mainCat: "大类", subCat: "小类", keywordCat: "关键词",
+        passwordTitle: "管理员验证", passwordPlaceholder: "输入密码", passwordBtn: "确认", passwordError: "密码错误。",
+        goToMain: "回到主页",
+        categories: {
+          '무대영상': '舞台视频', '라이브': '直播', '유튜브': 'YouTube', '미디어': '媒体', 'SNS': '社群', '메시지': '消息', '기타': '其他', '전체 보기': '全部显示',
+          '음악방송': '打歌节目', '직캠': '直拍', '콘서트': '演唱会', '페스티벌': '音乐节', '대학축제': '大学庆典', '버스킹': '路演', '쇼케이스': 'Showcase', '팬미팅': '见面会', '팬싸인회': '签售会', '공항/퇴근길': '机场/下班', '해외투어': '海外巡演', '킹덤': 'Kingdom',
+          '하루의 마무리': '一天的结束', '승협이 라이브': '承协直播', '승구리당당': '承协直播2', '우리 얘기 좀 합시다': '聊聊吧', '개인 라이브': '个人直播', '단체 라이브': '团体直播', '인스타그램 라이브': 'IG 直播', '기타 라이브': '其他直播',
+          '뮤직비디오': 'MV', '메이킹': '制作', '비하인드': '花絮', '레코딩로그': '录音日志', '승캠': '承Cam', '승협이': '承协', '합주일지': '合奏日志', '커버곡': '翻唱', '스페셜클립': '特别片段', '쇼츠': 'Shorts', '엔킷리스트': '招募', '버킷리스트': '清单',
+          '방송/예능': '综艺节目', '라디오': '广播', '인터뷰': '采访', '잡지/화보': '杂志/画报', '웹예능/웹컨텐츠': '网络综艺',
+          '공식 트위터': '官方推特', '개인 인스타그램': '个人IG', '공식 인스타그램': '官方IG', '릴스': 'Reels', '틱톡': 'TikTok', '공식 카페': '官咖', '공식 블로그': '官方博客',
+          '버블': 'Bubble', '프롬': 'Fromm', '연말결산': '年终结算', '백업': '备份',
+          '모음집': '合集', '이마키스': '额头吻', '질투': '嫉妒', '친지마': '亲其马', '투샷': '合影', '셀카': '自拍', '하크잖': '爱心', '커플템': '情侣款'
+        }
+      },
+      jp: {
+        archive: "アーカイブ", keyword: "キーワード", calendar: "カレンダー",
+        listAdmin: "リスト", calAdmin: "カレンダー", importAdmin: "インポート",
+        searchPlaceholder: "キーワードを入力...", searchHint: "💡 検索例: 2023-05-22, ライブ, 動画",
+        all: "すべて", total: "合計", unit: "件", more: "もっと見る (+)", latest: "最新順", oldest: "古い順",
+        empty: "記録がありません。", add: "+ 追加", save: "保存", cancel: "Cancel", edit: "編集", delete: "削除",
+        year: "年", month: "月", daySun: "日", dayMon: "月", dayTue: "화", dayWed: "水", dayThu: "木", dayFri: "金", daySat: "土",
+        importTitle: "外部データ管理", importId: "アカウントフィルタ (任意)", importStart: "開始日", importEnd: "終了日", importBtn: "Rawデータ取得",
+        postBtn: "投稿する", extract: "抽出", landingLink: "リンク", thumbUrl: "サムネイル URL", title: "タイトル", date: "日付", mainCat: "大分類", subCat: "小分類", keywordCat: "キーワード",
+        passwordTitle: "管理者認証", passwordPlaceholder: "パスワードを入力", passwordBtn: "確認", passwordError: "パスワードが違います。",
+        goToMain: "メインへ戻る",
+        categories: {
+          '무대영상': 'ステージ', '라이브': 'ライブ', '유튜브': 'YouTube', '미디어': 'メディア', 'SNS': 'SNS', '메시지': 'メッセージ', '기타': 'その他', '전체 보기': 'すべて表示',
+          '음악방송': '音楽番組', '직캠': 'ファンカム', '콘서트': 'コンサート', '페스티벌': 'フェス', '대학축제': '学祭', '버스킹': '路上ライブ', '쇼케이스': 'ショーケース', '팬미팅': 'ファンミ', '팬싸인회': 'サイン会', '공항/퇴근길': '空港/出勤', '해외ツアー': '海外ツアー', '킹덤': 'KINGDOM',
+          '하루의 마무리': '1日の締め', '승협이 라이브': '承协ライブ', '승구리당당': '承协ライブ2', '우리 얘기 좀 합시다': '話そう', '개인 라이브': '個人ライブ', '단체 라이브': '団体ライブ', '인스타그램 라이브': 'インスタライブ', '기타 라이브': '他ライブ',
+          '뮤직비디오': 'MV', '메이킹': 'メイキング', '비하인드': 'ビハインド', '레코딩로그': 'レコーディング', '승캠': '承Cam', '승협이': '承协', '합주일지': '合奏日誌', '커버곡': 'カバー', '스페셜클립': '特別映像', '쇼츠': 'Shorts', '엔킷리스트': '募集中', '버킷리스트': 'リスト',
+          '방송/예능': 'バラエティ', '라디오': 'ラジオ', '인터뷰': 'インタビュー', '잡지/화보': '雑誌/グラビア', '웹예능/웹컨텐츠': 'Web番組',
+          '공식 트위터': '公式Twitter', '개인 인스타그램': '個人IG', '공식 인스타그램': '公式IG', '릴스': 'Reels', '틱톡': 'TikTok', '공식 카페': 'ファンカフェ', '公式ブログ': '公式ブログ',
+          '버블': 'Bubble', '프롬': 'Fromm', '연말결산': '年末精算', '백업': 'バックアップ',
+          '모음집': 'まとめ', '이마키스': 'おでこキス', '질투': '嫉妬', '친지마': 'チンジマ', '투샷': 'ツーショット', '셀카': '自撮り', '하크잖': 'ハート', '커플템': 'ペア'
+        }
+      }
+    };
+
+    let MOCK_ARCHIVE_DATA = [];
+    let IMPORTED_TEMP_DATA = []; 
+
+    const state = {
+      lang: 'ko',
+      isLoading: true,
+      sortOrder: 'desc',
+      activeMainTab: 'archive', 
+      activeSubTab: '전체 보기',
+      activeCategory: '전체',
+      selectedDate: todayStr,
+      activeKeyword: '전체',
+      viewYear: now.getFullYear(),
+      viewMonth: now.getMonth() + 1,
+      searchTerm: '',
+      displayLimit: 30,
+      isAdminMode: false,
+      adminTab: 'list', 
+      isEditModalOpen: false,
+      isYearDropdownOpen: false,
+      isMonthDropdownOpen: false,
+      isPasswordModalOpen: false,
+      passwordError: false,
+      isExtracting: false, 
+      adminEditingId: null,
+      adminEditingRaw: false,
+      adminTempMainType: '무대영상',
+      importTempId: '',
+      importStartDate: '',
+      importEndDate: '',
+      hasSearchedImport: false
+    };
+
+    const getT = (key) => {
+      if (!TRANSLATIONS[state.lang] || !TRANSLATIONS[state.lang].categories) return key;
+      return TRANSLATIONS[state.lang].categories[key] || key;
+    };
+
+    // --- Actions ---
+    window.setLanguage = (code) => { state.lang = code; render(); };
+    window.setMainTab = (tabId) => { state.activeMainTab = tabId; state.displayLimit = 30; render(); };
+    window.setAdminTab = (tabId) => { state.adminTab = tabId; state.displayLimit = 30; render(); };
+    window.setSubTab = (tab) => { state.activeSubTab = tab; state.activeCategory = '전체'; state.displayLimit = 30; render(); };
+    window.setCategory = (cat) => { state.activeCategory = cat; state.displayLimit = 30; render(); };
+    window.setSelectedDate = (date) => { state.selectedDate = date; render(); };
+    window.setKeyword = (kw) => { state.activeKeyword = kw; state.displayLimit = 30; render(); };
+    window.handleSearch = (e) => { state.searchTerm = e.target.value; state.displayLimit = 30; render(); };
+    window.toggleSort = () => { state.sortOrder = state.sortOrder === 'desc' ? 'asc' : 'desc'; render(); };
+    window.loadMore = () => { state.displayLimit += 30; render(); };
+
+    window.toggleYearDropdown = (e) => { e.stopPropagation(); state.isYearDropdownOpen = !state.isYearDropdownOpen; state.isMonthDropdownOpen = false; render(); };
+    window.toggleMonthDropdown = (e) => { e.stopPropagation(); state.isMonthDropdownOpen = !state.isMonthDropdownOpen; state.isYearDropdownOpen = false; render(); };
+    window.changeViewYear = (year) => { state.viewYear = parseInt(year); state.isYearDropdownOpen = false; render(); };
+    window.changeViewMonth = (month) => { state.viewMonth = parseInt(month); state.isMonthDropdownOpen = false; render(); };
+    window.prevMonth = () => { if (state.viewMonth === 1) { state.viewMonth = 12; state.viewYear--; } else { state.viewMonth--; } render(); };
+    window.nextMonth = () => { if (state.viewMonth === 12) { state.viewMonth = 1; state.viewYear++; } else { state.viewMonth++; } render(); };
+
+    window.toggleAdminMode = () => { 
+      if (!state.isAdminMode) {
+        state.isPasswordModalOpen = true;
+        state.passwordError = false;
+      } else {
+        state.isAdminMode = false;
+        state.searchTerm = '';
+        state.displayLimit = 30;
+      }
+      render(); 
+    };
+
+    window.closePasswordModal = () => {
+      state.isPasswordModalOpen = false;
+      state.passwordError = false;
+      render();
+    };
+
+    window.submitPassword = (e) => {
+      e.preventDefault();
+      const input = document.getElementById('admin-password-input').value;
+      if (input === '1028hqab') {
+        state.isAdminMode = true;
+        state.isPasswordModalOpen = false;
+        state.passwordError = false;
+        render();
+      } else {
+        state.passwordError = true;
+        render();
+      }
+    };
+    
+    window.openAdminModal = (id = null, isRaw = false) => {
+      state.adminEditingId = id;
+      state.adminEditingRaw = isRaw;
+      
+      if (id !== null) {
+        let item;
+        if (isRaw) {
+          item = IMPORTED_TEMP_DATA[id];
+        } else {
+          item = MOCK_ARCHIVE_DATA.find(d => d.id === Number(id));
+        }
+        if (item) state.adminTempMainType = item.mainType || '무대영상';
+      } else {
+        state.adminEditingId = null;
+        state.adminTempMainType = '무대영상'; 
+      }
+      state.isEditModalOpen = true;
+      render();
+    };
+
+    window.closeAdminModal = () => { state.isEditModalOpen = false; render(); };
+    
+    // ✅ 소분류 선택 시 대분류 자동 변경 로직
+    window.handleAdminSubCatChange = (subVal) => {
+      for (const mainKey in CATEGORIES) {
+        if (CATEGORIES[mainKey].includes(subVal)) {
+          state.adminTempMainType = mainKey;
+          const mainSelect = document.getElementById('form-mainType');
+          if (mainSelect) mainSelect.value = mainKey;
+          break;
+        }
+      }
+    };
+    
+    window.deleteData = (id) => { 
+      if(confirm("정말 삭제하시겠습니까?")) { 
+        MOCK_ARCHIVE_DATA = MOCK_ARCHIVE_DATA.filter(d => d.id !== Number(id)); 
+        render(); 
+      } 
+    };
+
+    window.deleteRawData = async (indexOrEvent) => {
+      if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes("여기에_앱스스크립트")) {
+        return alert("Google Apps Script 웹 앱 URL이 설정되지 않았습니다.");
+      }
+
+      let selectedIndices = [];
+      if (typeof indexOrEvent === 'number') {
+        selectedIndices.push(indexOrEvent);
+      } else {
+        selectedIndices = IMPORTED_TEMP_DATA.map((item, idx) => item.selected ? idx : -1).filter(idx => idx !== -1);
+      }
+
+      if (selectedIndices.length === 0) {
+        return alert("선택된 항목이 없습니다.");
+      }
+
+      if (!confirm(`선택한 ${selectedIndices.length}개의 항목을 Raw 시트에서 영구 삭제하시겠습니까?`)) return;
+
+      const bulkBtn = document.getElementById('bulk-delete-btn');
+      if (bulkBtn) bulkBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 loading-spin inline-block align-middle mr-1"></i> 삭제중...';
+
+      let successCount = 0;
+      let failCount = 0;
+      let lastError = "";
+
+      for (let i = 0; i < selectedIndices.length; i++) {
+        const idx = selectedIndices[i];
+        const item = IMPORTED_TEMP_DATA[idx];
+        const btn = document.getElementById(`del-raw-btn-${idx}`);
+        if(btn) btn.innerHTML = '<i data-lucide="loader-2" class="w-3 h-3 loading-spin inline-block align-middle"></i>';
+
+        try {
+          const res = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ action: "deleteRaw", link: item.link })
+          });
+          const result = await res.json();
+          if (result.status === "success") {
+            item._deleted = true;
+            successCount++;
+          } else {
+            throw new Error(result.message || "Apps Script 내부 오류");
+          }
+        } catch (err) { 
+          lastError = err.message;
+          failCount++;
+        }
+      }
+
+      IMPORTED_TEMP_DATA = IMPORTED_TEMP_DATA.filter(item => !item._deleted);
+
+      if (failCount > 0) {
+        alert(`부분 실패가 발생했습니다.\n- 성공: ${successCount}건\n- 실패: ${failCount}건\n\n[마지막 에러] ${lastError}`);
+      } else {
+        alert(`총 ${successCount}건의 데이터가 Raw 시트에서 성공적으로 삭제되었습니다.`);
+      }
+      
+      render();
+    };
+
+    window.saveData = async (e) => {
+      e.preventDefault();
+      const mainType = document.getElementById('form-mainType').value.trim();
+      const type = document.getElementById('form-type').value.trim();
+      const date = document.getElementById('form-date').value.trim();
+      const title = document.getElementById('form-title').value.trim();
+      const link = document.getElementById('form-link').value.trim();
+      const img = document.getElementById('form-img').value.trim();
+      const rawKeywords = document.getElementById('form-keywords').value.trim();
+
+      const btn = document.getElementById('modal-save-btn');
+      if(btn) btn.innerHTML = '저장 중...';
+
+      if (state.adminEditingRaw) {
+        const idx = state.adminEditingId;
+        const item = IMPORTED_TEMP_DATA[idx];
+        const oldLink = item.link;
+        const account = item.account;
+        const newData = [title, date, link, account, mainType, type, rawKeywords, img];
+
+        try {
+          const res = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ action: "updateRaw", oldLink: oldLink, newData: newData })
+          });
+          const result = await res.json();
+          if (result.status === "success") {
+            IMPORTED_TEMP_DATA[idx] = { ...item, mainType, type, date, title, img, link, rawKeywords };
+            alert("Raw 데이터가 시트에 성공적으로 수정되었습니다.");
+          } else {
+            throw new Error(result.message);
+          }
+        } catch (err) {
+          alert("수정 실패: " + err.message);
+        }
+      } else {
+        if(state.adminEditingId !== null) {
+          const idx = MOCK_ARCHIVE_DATA.findIndex(d => d.id === state.adminEditingId);
+          if(idx > -1) {
+            MOCK_ARCHIVE_DATA[idx] = { 
+              ...MOCK_ARCHIVE_DATA[idx], mainType, type, date, title, img, link, 
+              searchData: `${title} ${rawKeywords}`.toLowerCase(), rawKeywords, account: MOCK_ARCHIVE_DATA[idx].account 
+            };
+          }
+        } else {
+          MOCK_ARCHIVE_DATA.push({ 
+            id: Date.now(), mainType, type, date, title, img, link, 
+            searchData: `${title} ${rawKeywords}`.toLowerCase(), rawKeywords, account: "" 
+          });
+        }
+      }
+      
+      state.isEditModalOpen = false; 
+      render();
+    };
+
+    window.updateImportFields = () => {
+      const idInput = document.getElementById('import-id');
+      const startInput = document.getElementById('import-start-date');
+      const endInput = document.getElementById('import-end-date');
+      if(idInput) state.importTempId = idInput.value;
+      if(startInput) state.importStartDate = startInput.value;
+      if(endInput) state.importEndDate = endInput.value;
+    };
+
+    window.handleTwitterFetch = async () => {
+      const twitterId = document.getElementById('twitter-id').value.trim();
+      const startDate = document.getElementById('twitter-start-date').value;
+      const endDate = document.getElementById('twitter-end-date').value;
+
+      if(!twitterId) return alert("트위터 계정 아이디를 입력해주세요.");
+      if(!startDate || !endDate) return alert("수집할 시작 날짜와 종료 날짜를 모두 입력해주세요.");
+      if(startDate > endDate) return alert("시작 날짜가 종료 날짜보다 클 수 없습니다.");
+
+      const btn = document.getElementById('twitter-fetch-btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 loading-spin inline-block align-middle mr-1"></i> 트윗 수집 중...';
+
+      try {
+        const response = await fetch(GAS_WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            action: "fetchTwitter",
+            twitterId: twitterId,
+            startDate: startDate,
+            endDate: endDate
+          })
+        });
+
+        if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+
+        const result = await response.json();
+        
+        if (result.status === "success") {
+          alert(`성공적으로 ${result.count}개의 트윗을 가져와 RawContents 시트에 추가했습니다!`);
+          handleImportFetch(); 
+        } else {
+          throw new Error(result.message || "서버에서 오류가 발생했습니다.");
+        }
+      } catch (err) {
+        alert("트위터 수집에 실패했습니다. 에러: " + err.message);
+      } finally {
+        btn.innerHTML = originalText;
+        lucide.createIcons();
+      }
+    };
+
+    window.toggleImportSelect = (idx) => {
+      if (IMPORTED_TEMP_DATA[idx]) {
+        IMPORTED_TEMP_DATA[idx].selected = !IMPORTED_TEMP_DATA[idx].selected;
+      }
+      updateImportBulkUI();
+    };
+
+    window.toggleImportSelectAll = (e) => {
+      const checked = e.target.checked;
+      IMPORTED_TEMP_DATA.forEach((item, idx) => {
+        item.selected = checked;
+        const cb = document.getElementById(`import-cb-${idx}`);
+        if (cb) cb.checked = checked;
+      });
+      updateImportBulkUI();
+    };
+
+    function updateImportBulkUI() {
+      const allSelected = IMPORTED_TEMP_DATA.length > 0 && IMPORTED_TEMP_DATA.every(item => item.selected);
+      const allCheckbox = document.getElementById('import-select-all');
+      if (allCheckbox) allCheckbox.checked = allSelected;
+      
+      const selectedCount = IMPORTED_TEMP_DATA.filter(item => item.selected).length;
+      const countSpan = document.getElementById('bulk-publish-count');
+      if (countSpan) countSpan.innerText = selectedCount > 0 ? `(${selectedCount}개)` : '';
+    }
+
+    window.handleImportFetch = async () => {
+      state.isLoading = true;
+      render();
+
+      try {
+        const res = await fetch(RAW_SHEET_URL);
+        const text = await res.text();
+        const rows = parseCSV(text);
+
+        if (rows.length > 0 && rows[0][0] && rows[0][0].includes('제목')) rows.shift();
+
+        let rawDataList = rows.map((row, index) => {
+          if (!row || row.length < 2 || !row[0]) return null;
+          const title = (row[0] || '').trim();
+          let rawDate = (row[1] || '').trim();
+          let dateStr = rawDate.replace(/[\.\s\/]/g, '-').replace(/-+/g, '-');
+          if (dateStr.includes('-')) {
+            const parts = dateStr.split('-');
+            if (parts.length >= 3) dateStr = `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+          }
+          const link = (row[2] || '').trim();
+          const account = (row[3] || '').trim();
+          const mainType = (row[4] || '기타').trim(); 
+          const type = (row[5] || '기타').trim();   
+          const rawKeywords = (row[6] || '').trim(); 
+          const img = (row[7] || '').trim();        
+          return { id: 'raw_' + index, mainType, type, date: dateStr, title, img, link, rawKeywords, account, selected: false };
+        }).filter(item => item && item.title);
+
+        const accountFilter = state.importTempId.toLowerCase();
+        const startDate = state.importStartDate;
+        const endDate = state.importEndDate;
+
+        IMPORTED_TEMP_DATA = rawDataList.filter(item => {
+          let pass = true;
+          if (accountFilter && !(item.account.toLowerCase().includes(accountFilter))) pass = false;
+          if (startDate && item.date < startDate) pass = false;
+          if (endDate && item.date > endDate) pass = false;
+          return pass;
+        });
+
+        state.hasSearchedImport = true;
+      } catch (err) {
+        alert("Raw 데이터를 불러오지 못했습니다. 에러: " + err.message);
+      }
+      
+      state.isLoading = false;
+      render();
+    };
+
+    window.publishSelectedRawData = async (indexOrEvent) => {
+      if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes("여기에_앱스스크립트")) {
+        return alert("Google Apps Script 웹 앱 URL이 설정되지 않았습니다.");
+      }
+
+      let selectedIndices = [];
+      if (typeof indexOrEvent === 'number') {
+        selectedIndices.push(indexOrEvent);
+      } else {
+        selectedIndices = IMPORTED_TEMP_DATA.map((item, idx) => item.selected ? idx : -1).filter(idx => idx !== -1);
+      }
+
+      if (selectedIndices.length === 0) {
+        return alert("선택된 항목이 없습니다.");
+      }
+
+      if (!confirm(`선택한 ${selectedIndices.length}개의 항목을 게시하겠습니까?`)) return;
+
+      const bulkBtn = document.getElementById('bulk-publish-btn');
+      if(bulkBtn) bulkBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 loading-spin inline-block align-middle mr-1"></i> 처리중...';
+      
+      let successCount = 0;
+      let failCount = 0;
+      let lastError = "";
+
+      for (let i = 0; i < selectedIndices.length; i++) {
+        const idx = selectedIndices[i];
+        const item = IMPORTED_TEMP_DATA[idx];
+        const btn = document.getElementById(`publish-btn-${idx}`);
+        if(btn) btn.innerHTML = '<i data-lucide="loader-2" class="w-3 h-3 loading-spin inline-block align-middle mr-1"></i>';
+
+        try {
+          const rowData = [item.title, item.date, item.link, item.account, item.mainType, item.type, item.rawKeywords, item.img];
+          
+          const response = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ action: "publish", data: rowData })
+          });
+
+          if (!response.ok) throw new Error(`HTTP ${response.status} Error`);
+
+          const result = await response.json();
+          if (result.status === "success") {
+            item.id = Date.now() + i;
+            item.searchData = `${item.title} ${item.account} ${item.rawKeywords} ${item.mainType} ${item.type} ${item.date}`.toLowerCase();
+            MOCK_ARCHIVE_DATA.push(item); 
+            item._published = true;
+            successCount++;
+          } else {
+            throw new Error(result.message || "Apps Script 내부 오류");
+          }
+        } catch (err) {
+          lastError = err.message;
+          failCount++;
+        }
+      }
+
+      IMPORTED_TEMP_DATA = IMPORTED_TEMP_DATA.filter(item => !item._published);
+
+      if (failCount > 0) {
+        alert(`부분 실패가 발생했습니다.\n- 성공: ${successCount}건\n- 실패: ${failCount}건\n\n[마지막 에러] ${lastError}`);
+      } else {
+        alert(`총 ${successCount}건의 데이터가 시트에 성공적으로 게시되었습니다.`);
+      }
+      
+      render();
+    };
+
+    window.extractThumbnail = async () => {
+      const link = document.getElementById('form-link').value.trim();
+      if(!link) return alert("랜딩 링크를 먼저 입력해주세요.");
+      state.isExtracting = true;
+      const btn = document.getElementById('btn-extract');
+      if(btn) btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 loading-spin inline-block align-middle mr-1"></i>';
+      lucide.createIcons();
+      try {
+        const response = await fetch(`https://api.microlink.io?url=${encodeURIComponent(link)}`);
+        const data = await response.json();
+        if (data.status === 'success' && data.data.image && data.data.image.url) {
+          document.getElementById('form-img').value = data.data.image.url;
+        } else { alert("이미지를 찾을 수 없습니다."); }
+      } catch (err) { alert("추출 중 오류 발생"); } finally {
+        state.isExtracting = false;
+        const T = TRANSLATIONS[state.lang];
+        if(btn) btn.innerHTML = `<i data-lucide="image-plus" class="w-4 h-4 inline-block align-middle mr-1"></i> ${T.extract}`;
+        lucide.createIcons();
+      }
+    };
+
+    document.addEventListener('click', () => {
+      if (state.isYearDropdownOpen || state.isMonthDropdownOpen) {
+        state.isYearDropdownOpen = false; 
+        state.isMonthDropdownOpen = false; 
+        render();
+      }
+    });
+
+    function parseCSV(str) {
+      const arr = [];
+      let quote = false;
+      let row = 0, col = 0;
+      for (let c = 0; c < str.length; c++) {
+        let cc = str[c], nc = str[c+1];
+        arr[row] = arr[row] || [];
+        arr[row][col] = arr[row][col] || '';
+        if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+        if (cc == '"') { quote = !quote; continue; }
+        if (cc == ',' && !quote) { ++col; continue; }
+        if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; }
+        if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+        if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+        arr[row][col] += cc;
+      }
+      return arr;
+    }
+
+    async function loadSheetData() {
+      try {
+        const res = await fetch(SHEET_URL);
+        const text = await res.text();
+        const rows = parseCSV(text);
+
+        if (rows.length > 0 && rows[0][0] && rows[0][0].includes('제목')) rows.shift();
+
+        MOCK_ARCHIVE_DATA = rows.map((row, index) => {
+          if (!row || row.length < 2 || !row[0]) return null;
+          const title = (row[0] || '').trim();
+          let rawDate = (row[1] || '').trim();
+          let dateStr = rawDate.replace(/[\.\s\/]/g, '-').replace(/-+/g, '-');
+          if (dateStr.includes('-')) {
+            const parts = dateStr.split('-');
+            if (parts.length >= 3) dateStr = `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+          }
+          const link = (row[2] || '').trim();
+          const account = (row[3] || '').trim();
+          const mainType = (row[4] || '기타').trim(); 
+          const type = (row[5] || '기타').trim();   
+          const rawKeywords = (row[6] || '').trim(); 
+          const img = (row[7] || '').trim();        
+          const searchData = `${title} ${account} ${rawKeywords} ${mainType} ${type} ${dateStr}`.toLowerCase();
+          return { id: index + 1, mainType, type, date: dateStr, title, img, link, searchData, rawKeywords, account };
+        }).filter(item => item && item.title); 
+        
+        state.isLoading = false;
+        render();
+      } catch (error) {
+        state.isLoading = false;
+        render();
+      }
+    }
+
+    function createAdminCardHTML(item) {
+      const T = TRANSLATIONS[state.lang];
+      return `
+        <div class="bg-[#1a1a1a] p-3.5 rounded-2xl border border-neutral-800 flex gap-4 hover:border-neutral-700 transition-colors">
+          <div class="w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-neutral-800"><img src="${item.img || 'https://via.placeholder.com/80'}" class="w-full h-full object-cover"></div>
+          <div class="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+            <div>
+              <div class="text-[10px] font-medium text-red-400 truncate mb-0.5">${getT(item.mainType)} > ${getT(item.type)} | ${item.date || '---'}</div>
+              <div class="text-xs font-bold text-white line-clamp-1">${item.title}</div>
+            </div>
+            <div class="flex gap-2 mt-2">
+              <button onclick="openAdminModal(${item.id}, false)" class="text-[10px] font-bold bg-neutral-800 text-gray-300 px-3 py-1.5 rounded-lg active:scale-95 transition-all">${T.edit}</button>
+              <button onclick="deleteData(${item.id})" class="text-[10px] font-bold bg-red-900/20 text-red-400 px-3 py-1.5 rounded-lg active:scale-95 transition-all">${T.delete}</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function createCardHTML(item) {
+      const imgUrl = item.img || 'https://via.placeholder.com/600x337/1a1a1a/ffffff?text=No+Image';
+      const WrapperTag = item.link ? 'a' : 'div';
+      const hrefAttr = item.link ? `href="${item.link}" target="_blank"` : '';
+      return `
+        <${WrapperTag} ${hrefAttr} class="flex flex-col gap-2 group cursor-pointer block">
+          <div class="relative aspect-video rounded-xl overflow-hidden bg-neutral-800 border border-neutral-800 group-hover:border-neutral-600 transition-colors">
+            <img src="${imgUrl}" alt="Thumb" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+          </div>
+          <div class="flex flex-col gap-1 px-0.5">
+            <div class="flex justify-between items-center text-[10px]">
+              <span class="border border-red-500/50 text-red-500 bg-red-500/10 px-1.5 py-0.5 rounded font-medium text-[9px] uppercase">${getT(item.type)}</span>
+              <span class="text-gray-500 font-medium tracking-tight text-[10px]">${item.date || ''}</span>
+            </div>
+            <h3 class="text-xs font-medium text-gray-200 line-clamp-2 leading-snug mt-1 group-hover:text-white transition-colors">${item.title}</h3>
+          </div>
+        </${WrapperTag}>
+      `;
+    }
+
+    function getSearchFilteredData(dataArray) {
+      if(!state.searchTerm) return dataArray;
+      const lowerSearch = state.searchTerm.toLowerCase();
+      return dataArray.filter(item => item.title.toLowerCase().includes(lowerSearch) || item.searchData.includes(lowerSearch));
+    }
+
+    function getSortedData(dataArray) {
+      return [...dataArray].sort((a, b) => {
+        const dateA = a.date || "";
+        const dateB = b.date || "";
+        const dateComp = state.sortOrder === 'desc' ? dateB.localeCompare(dateA) : a.date.localeCompare(dateB);
+        return dateComp || (state.sortOrder === 'desc' ? b.id - a.id : a.id - b.id);
+      });
+    }
+
+    function getCalendarHeaderHTML() {
+      const T = TRANSLATIONS[state.lang];
+      const years = Array.from({length: 10}, (_, i) => 2017 + i);
+      const months = Array.from({length: 12}, (_, i) => i + 1);
+      return `
+        <div class="flex items-center justify-between mb-6 px-1 relative">
+          <button onclick="prevMonth()" class="p-2 hover:bg-neutral-800 rounded-full transition-colors"><i data-lucide="chevron-left"></i></button>
+          <div class="flex gap-2">
+            <div class="relative">
+              <button onclick="toggleYearDropdown(event)" class="flex items-center gap-1 px-3 py-1.5 bg-[#1a1a1a] border border-neutral-800 rounded-xl hover:border-neutral-600 transition-all font-bold text-lg text-white">${state.viewYear}${T.year} <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i></button>
+              ${state.isYearDropdownOpen ? `<div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-28 bg-[#1a1a1a] border border-neutral-700 rounded-xl shadow-2xl z-50 overflow-hidden dropdown-animate"><div class="max-h-48 overflow-y-auto custom-scrollbar">${years.map(y => `<div onclick="changeViewYear(${y})" class="px-4 py-2.5 text-sm text-center border-b border-neutral-800 last:border-none hover:bg-neutral-800 cursor-pointer transition-colors ${state.viewYear === y ? 'text-red-500 font-bold bg-neutral-800/50' : 'text-gray-300'}">${y}${T.year}</div>`).join('')}</div></div>` : ''}
+            </div>
+            <div class="relative">
+              <button onclick="toggleMonthDropdown(event)" class="flex items-center gap-1 px-3 py-1.5 bg-[#1a1a1a] border border-neutral-800 rounded-xl hover:border-neutral-600 transition-all font-bold text-lg text-white">${state.viewMonth}${T.month} <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i></button>
+              ${state.isMonthDropdownOpen ? `<div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-24 bg-[#1a1a1a] border border-neutral-700 rounded-xl shadow-2xl z-50 overflow-hidden dropdown-animate"><div class="max-h-48 overflow-y-auto custom-scrollbar">${months.map(m => `<div onclick="changeViewMonth(${m})" class="px-4 py-2.5 text-sm text-center border-b border-neutral-800 last:border-none hover:bg-neutral-800 cursor-pointer transition-colors ${state.viewMonth === m ? 'text-red-500 font-bold bg-neutral-800/50' : 'text-gray-300'}">${m}${T.month}</div>`).join('')}</div></div>` : ''}
+            </div>
+          </div>
+          <button onclick="nextMonth()" class="p-2 hover:bg-neutral-800 rounded-full transition-colors"><i data-lucide="chevron-right"></i></button>
+        </div>
+      `;
+    }
+
+    function render() {
+      const T = TRANSLATIONS[state.lang];
+      
+      document.getElementById('top-home-text').innerText = T.goToMain;
+
+      ['ko', 'en', 'cn', 'jp'].forEach(c => {
+        const btn = document.getElementById(`lang-${c}`);
+        if(btn) {
+          if(state.lang === c) { btn.classList.add('bg-red-600', 'text-white', 'border-red-500'); btn.classList.remove('text-gray-500', 'border-neutral-800'); } 
+          else { btn.classList.remove('bg-red-600', 'text-white', 'border-red-500'); btn.classList.add('text-gray-500', 'border-neutral-800'); }
+        }
+      });
+
+      const adminBtn = document.getElementById('admin-toggle-btn');
+      adminBtn.innerHTML = state.isAdminMode ? `<i data-lucide="unlock" class="w-[18px] h-[18px] text-red-500"></i>` : `<i data-lucide="lock" class="w-[18px] h-[18px] text-gray-400"></i>`;
+      
+      const searchInput = document.getElementById('search-input');
+      if(searchInput) searchInput.placeholder = T.searchPlaceholder;
+      const searchHint = document.getElementById('search-hint');
+      if(searchHint) searchHint.innerText = T.searchHint;
+
+      const mainTabsContainer = document.getElementById('main-tabs');
+      const contentArea = document.getElementById('content-area');
+      
+      if (state.isLoading) {
+        contentArea.innerHTML = `<div class="flex flex-col items-center justify-center mt-32"><i data-lucide="loader-2" class="w-8 h-8 text-red-500 animate-spin mb-4"></i></div>`;
+        lucide.createIcons();
+        return;
+      }
+
+      let contentHTML = '';
+
+      if (state.isPasswordModalOpen) {
+        contentHTML = `
+          <div class="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
+            <form onsubmit="submitPassword(event)" class="bg-[#1a1a1a] w-full max-sm rounded-2xl p-6 border border-neutral-700 flex flex-col gap-4 animate-in zoom-in-95 duration-200 shadow-2xl">
+              <div class="flex justify-between items-center mb-2">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5 text-red-500"></i> ${T.passwordTitle}</h3>
+                <button type="button" onclick="closePasswordModal()" class="text-gray-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+              </div>
+              <div class="flex flex-col gap-1">
+                <input type="password" id="admin-password-input" placeholder="${T.passwordPlaceholder}" class="bg-[#111] border ${state.passwordError ? 'border-red-600' : 'border-neutral-700'} rounded-xl p-3 text-center text-sm text-white focus:outline-none focus:border-red-600 transition-colors" autofocus>
+                ${state.passwordError ? `<p class="text-[10px] text-red-500 text-center mt-1 font-bold">${T.passwordError}</p>` : ''}
+              </div>
+              <button type="submit" class="w-full bg-red-600 hover:bg-red-500 py-3 rounded-xl font-bold text-sm transition-colors text-white">${T.passwordBtn}</button>
+            </form>
+          </div>
+        `;
+      } else if (state.isAdminMode) {
+        const adminTabs = [{ id: 'list', icon: 'database', label: T.listAdmin }, { id: 'calendar', icon: 'calendar', label: T.calAdmin }, { id: 'import', icon: 'download-cloud', label: T.importAdmin }];
+        mainTabsContainer.innerHTML = adminTabs.map(tab => `<button onclick="setAdminTab('${tab.id}')" class="flex-1 flex justify-center items-center gap-1.5 py-3 text-sm font-bold border-b-2 transition-colors ${state.adminTab === tab.id ? 'border-red-600 text-white' : 'border-transparent text-gray-500'}"><i data-lucide="${tab.icon}" class="w-4 h-4"></i>${tab.label}</button>`).join('');
+        document.getElementById('search-container').style.display = state.adminTab === 'list' ? 'block' : 'none';
+
+        if (state.adminTab === 'list') {
+          let filteredData = getSortedData(getSearchFilteredData(MOCK_ARCHIVE_DATA));
+          const visibleData = filteredData.slice(0, state.displayLimit);
+          contentHTML = `
+            <div class="animate-in fade-in duration-300">
+              <div class="flex justify-between items-center mb-6 px-1"><h2 class="text-xl font-bold text-white flex items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5 text-red-500"></i> ${T.listAdmin}</h2><button onclick="openAdminModal(null, false)" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-colors">${T.add}</button></div>
+              <div class="flex flex-col gap-3">${visibleData.map(item => createAdminCardHTML(item)).join('')}</div>
+              ${filteredData.length > state.displayLimit ? `<button onclick="loadMore()" class="w-full mt-8 py-3 bg-[#1a1a1a] border border-neutral-800 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition-colors">${T.more}</button>` : ''}
+            </div>
+          `;
+        } else if (state.adminTab === 'calendar') {
+          const daysInMonth = new Date(state.viewYear, state.viewMonth, 0).getDate();
+          const firstDay = new Date(state.viewYear, state.viewMonth - 1, 1).getDay();
+          const monthKey = `${state.viewYear}-${String(state.viewMonth).padStart(2, '0')}`;
+          const currentMonthData = MOCK_ARCHIVE_DATA.filter(item => item.date && item.date.startsWith(monthKey));
+          const activeDays = currentMonthData.map(item => parseInt(item.date.split('-')[2]));
+          let calGrid = '';
+          for(let i=0; i<firstDay; i++) calGrid += `<div></div>`;
+          for(let d=1; d<=daysInMonth; d++) {
+            const dateStr = `${state.viewYear}-${String(state.viewMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const isSelected = state.selectedDate === dateStr;
+            const isToday = todayStr === dateStr;
+            calGrid += `<div onclick="setSelectedDate('${dateStr}')" class="flex flex-col items-center justify-center h-12 cursor-pointer group"><div class="w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold ${isSelected ? 'bg-red-600 text-white' : isToday ? 'text-red-500 bg-neutral-800' : 'text-gray-300 group-hover:bg-neutral-800'}">${d}</div>${activeDays.includes(d) ? `<div class="w-1 h-1 bg-red-500 rounded-full mt-0.5"></div>` : ''}</div>`;
+          }
+          let dailyData = getSortedData(MOCK_ARCHIVE_DATA.filter(item => item.date === state.selectedDate));
+          contentHTML = `
+            <div class="animate-in fade-in duration-300">
+              ${getCalendarHeaderHTML()}
+              <div class="grid grid-cols-7 text-[10px] text-gray-500 font-bold mb-2 text-center"><div>${T.daySun}</div><div>${T.dayMon}</div><div>${T.dayTue}</div><div>${T.dayWed}</div><div>${T.dayThu}</div><div>${T.dayFri}</div><div>${T.daySat}</div></div>
+              <div class="grid grid-cols-7 gap-y-1 mb-8">${calGrid}</div>
+              <div class="border-t border-neutral-800 pt-6">
+                <div class="flex items-center justify-between mb-4 border-l-4 border-red-600 pl-3"><h3 class="font-bold text-gray-200">${state.selectedDate} ${T.calAdmin}</h3><button onclick="openAdminModal(null, false)" class="text-[10px] font-bold text-red-500">${T.add}</button></div>
+                <div class="flex flex-col gap-3">${dailyData.length > 0 ? dailyData.map(item => createAdminCardHTML(item)).join('') : `<div class="text-center text-gray-500 text-sm py-10">${T.empty}</div>`}</div>
+              </div>
+            </div>
+          `;
+        } else if (state.adminTab === 'import') {
+          const selectedCount = IMPORTED_TEMP_DATA.filter(i => i.selected).length;
+          const allSelected = IMPORTED_TEMP_DATA.length > 0 && IMPORTED_TEMP_DATA.every(i => i.selected);
+
+          contentHTML = `
+            <div class="animate-in fade-in duration-300">
+              <div class="mb-6 px-1">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2 mb-4"><i data-lucide="download-cloud" class="w-5 h-5 text-red-500"></i> ${T.importTitle}</h2>
+                
+                <div class="bg-[#1a1a1a] border border-neutral-800 rounded-2xl p-4 flex flex-col gap-4 mb-6">
+                  <div class="flex items-center gap-2 mb-1">
+                    <i data-lucide="twitter" class="w-4 h-4 text-[#1DA1F2]"></i>
+                    <h3 class="font-bold text-sm text-white">트위터 데이터 수집 (API)</h3>
+                  </div>
+                  <div class="flex flex-col gap-1">
+                    <label class="text-[10px] text-gray-500 font-bold ml-1">트위터 계정 아이디 (@제외)</label>
+                    <input type="text" id="twitter-id" onclick="event.stopPropagation()" placeholder="예: NFlyingofficial" class="bg-[#111] border border-neutral-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#1DA1F2] transition-colors">
+                  </div>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div class="flex flex-col gap-1">
+                      <label class="text-[10px] text-gray-500 font-bold ml-1">시작 날짜</label>
+                      <input type="date" id="twitter-start-date" onclick="event.stopPropagation()" class="bg-[#111] border border-neutral-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#1DA1F2] transition-colors">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <label class="text-[10px] text-gray-500 font-bold ml-1">종료 날짜</label>
+                      <input type="date" id="twitter-end-date" onclick="event.stopPropagation()" class="bg-[#111] border border-neutral-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#1DA1F2] transition-colors">
+                    </div>
+                  </div>
+                  <button id="twitter-fetch-btn" onclick="handleTwitterFetch()" class="w-full bg-[#1DA1F2] hover:bg-[#1a8cd8] py-3 rounded-xl font-bold text-sm transition-colors text-white">트윗 수집하여 Raw 시트에 추가하기</button>
+                </div>
+
+                <div class="border-b border-neutral-800 mb-6"></div>
+
+                <div class="flex items-center gap-2 mb-3">
+                  <i data-lucide="database" class="w-4 h-4 text-gray-400"></i>
+                  <h3 class="font-bold text-sm text-gray-300">Raw 데이터 조회 및 게시</h3>
+                </div>
+                <div class="bg-[#1a1a1a] border border-neutral-800 rounded-2xl p-4 flex flex-col gap-4 mb-6">
+                  <div class="flex flex-col gap-1"><label class="text-[10px] text-gray-500 font-bold ml-1">${T.importId}</label><input type="text" id="import-id" value="${state.importTempId}" oninput="updateImportFields()" onclick="event.stopPropagation()" placeholder="계정명 혹은 ID" class="bg-[#111] border border-neutral-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-red-600 transition-colors"></div>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div class="flex flex-col gap-1"><label class="text-[10px] text-gray-500 font-bold ml-1">${T.importStart}</label><input type="date" id="import-start-date" value="${state.importStartDate}" oninput="updateImportFields()" onclick="event.stopPropagation()" class="bg-[#111] border border-neutral-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-red-600 transition-colors"></div>
+                    <div class="flex flex-col gap-1"><label class="text-[10px] text-gray-500 font-bold ml-1">${T.importEnd}</label><input type="date" id="import-end-date" value="${state.importEndDate}" oninput="updateImportFields()" onclick="event.stopPropagation()" class="bg-[#111] border border-neutral-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-red-600 transition-colors"></div>
+                  </div>
+                  <button onclick="handleImportFetch()" class="w-full bg-red-600 hover:bg-red-500 py-3 rounded-xl font-bold text-sm transition-colors">${T.importBtn}</button>
+                </div>
+                
+                ${IMPORTED_TEMP_DATA.length > 0 ? `
+                  <div class="flex justify-between items-center mb-3 px-1">
+                    <label class="flex items-center gap-2 text-xs font-bold text-gray-300 cursor-pointer">
+                      <input type="checkbox" id="import-select-all" onchange="toggleImportSelectAll(event)" ${allSelected ? 'checked' : ''} class="w-4 h-4 rounded bg-[#111] border-neutral-700 text-red-600 focus:ring-red-600">
+                      <span>전체 선택</span>
+                    </label>
+                    <div class="flex gap-2">
+                      <button id="bulk-delete-btn" onclick="deleteRawData(event)" class="bg-red-900/20 text-red-500 hover:text-red-400 text-xs font-bold px-3 py-2 rounded-lg active:scale-95 transition-all flex items-center gap-1">
+                        <i data-lucide="trash-2" class="w-3 h-3"></i> 선택 삭제
+                      </button>
+                      <button id="bulk-publish-btn" onclick="publishSelectedRawData(event)" class="bg-red-600 text-white text-xs font-bold px-3 py-2 rounded-lg active:scale-95 transition-all flex items-center gap-1">
+                        <i data-lucide="send" class="w-3 h-3"></i> 선택 게시 <span id="bulk-publish-count">${selectedCount > 0 ? `(${selectedCount}개)` : ''}</span>
+                      </button>
+                    </div>
+                  </div>
+                ` : ''}
+
+                <div class="flex flex-col gap-3">
+                  ${IMPORTED_TEMP_DATA.length > 0
+                    ? IMPORTED_TEMP_DATA.map((item, idx) => `
+                        <div class="bg-[#1a1a1a] p-3.5 rounded-2xl border border-neutral-800 flex gap-3 hover:border-neutral-700 transition-colors relative">
+                          <div class="flex items-center justify-center pl-1 pr-1">
+                            <input type="checkbox" id="import-cb-${idx}" onchange="toggleImportSelect(${idx})" ${item.selected ? 'checked' : ''} class="w-4 h-4 rounded bg-[#111] border-neutral-700 text-red-600 focus:ring-red-600 cursor-pointer">
+                          </div>
+                          <div class="w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-neutral-800"><img src="${item.img || 'https://via.placeholder.com/80'}" class="w-full h-full object-cover"></div>
+                          <div class="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                            <div>
+                              <div class="text-[10px] font-medium text-gray-400 truncate mb-0.5">계정: ${item.account || '-'} | ${item.date || '---'}</div>
+                              <div class="text-xs font-bold text-white line-clamp-1">${item.title}</div>
+                            </div>
+                            <div class="flex gap-2 mt-2 justify-end">
+                              <button onclick="openAdminModal(${idx}, true)" class="text-[10px] font-bold bg-neutral-800 hover:bg-neutral-700 text-gray-300 hover:text-white px-3 py-1.5 rounded-lg active:scale-95 transition-all flex items-center gap-1"><i data-lucide="edit-3" class="w-3 h-3"></i> 수정</button>
+                              <button id="del-raw-btn-${idx}" onclick="deleteRawData(${idx})" class="text-[10px] font-bold bg-red-900/10 hover:bg-red-900/30 text-red-500 hover:text-red-400 px-3 py-1.5 rounded-lg active:scale-95 transition-all flex items-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i> 삭제</button>
+                              <button id="publish-btn-${idx}" onclick="publishSelectedRawData(${idx})" class="text-[10px] font-bold bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg active:scale-95 transition-all flex items-center gap-1"><i data-lucide="send" class="w-3 h-3"></i> 게시하기</button>
+                            </div>
+                          </div>
+                        </div>
+                      `).join('')
+                    : (state.hasSearchedImport ? `<div class="text-center text-gray-500 text-sm py-8">조건에 맞는 데이터가 없습니다.</div>` : '')
+                  }
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        if (state.isEditModalOpen) {
+          let item = { mainType: state.adminTempMainType, type: '', date: state.selectedDate || todayStr, title: '', img: '', link: '', rawKeywords: '' };
+          if (state.adminEditingId !== null) {
+            item = state.adminEditingRaw ? IMPORTED_TEMP_DATA[state.adminEditingId] : MOCK_ARCHIVE_DATA.find(d => d.id === Number(state.adminEditingId));
+          }
+          let displayDate = item.date || '';
+          if (displayDate && !displayDate.includes('-') && displayDate.length === 8) displayDate = `${displayDate.slice(0,4)}-${displayDate.slice(4,6)}-${displayDate.slice(6,8)}`;
+          
+          contentHTML += `
+            <div class="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 backdrop-blur-sm" onclick="event.stopPropagation()">
+              <form onsubmit="saveData(event)" class="bg-[#1a1a1a] w-full max-sm rounded-2xl p-6 border border-neutral-700 flex flex-col gap-4 animate-in zoom-in-95 duration-200 shadow-2xl overflow-y-auto max-h-[90vh] custom-scrollbar">
+                <div class="flex justify-between items-center">
+                  <h3 class="font-bold text-lg text-white">${state.adminEditingRaw ? "Raw 데이터 수정" : (state.adminEditingId !== null ? T.edit : T.add)}</h3>
+                  <button type="button" onclick="closeAdminModal()" class="text-gray-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="flex flex-col gap-1">
+                    <label class="text-[10px] text-gray-500 font-bold ml-1">${T.subCat}</label>
+                    <select id="form-type" onchange="handleAdminSubCatChange(this.value)" class="bg-[#111] border border-neutral-700 rounded-xl p-3 text-xs text-white focus:outline-none">
+                      ${Object.values(CATEGORIES).flat().map(k => `<option value="${k}" ${item.type === k ? 'selected' : ''}>${getT(k)}</option>`).join('')}
+                    </select>
+                  </div>
+                  <div class="flex flex-col gap-1">
+                    <label class="text-[10px] text-gray-500 font-bold ml-1">${T.mainCat}</label>
+                    <select id="form-mainType" disabled class="bg-[#111] border border-neutral-700 rounded-xl p-3 text-xs text-gray-400 focus:outline-none opacity-70">
+                      ${Object.keys(CATEGORIES).map(k => `<option value="${k}" ${k === state.adminTempMainType ? 'selected' : ''}>${getT(k)}</option>`).join('')}
+                    </select>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="flex flex-col gap-1"><label class="text-[10px] text-gray-500 font-bold ml-1">${T.date}</label><input type="date" id="form-date" value="${displayDate}" class="bg-[#111] border border-neutral-700 rounded-xl p-3 text-xs text-white focus:outline-none"></div>
+                  <div class="flex flex-col gap-1"><label class="text-[10px] text-gray-500 font-bold ml-1">${T.keywordCat}</label><select id="form-keywords" class="bg-[#111] border border-neutral-700 rounded-xl p-3 text-xs text-white focus:outline-none"><option value="">${T.all}</option>${KEYWORDS.map(kw => `<option value="${kw}" ${item.rawKeywords === kw ? 'selected' : ''}>${getT(kw)}</option>`).join('')}</select></div>
+                </div>
+                <div class="flex flex-col gap-1"><label class="text-[10px] text-gray-500 font-bold ml-1">${T.title}</label><input type="text" id="form-title" placeholder="${T.title}" value="${(item.title || '').replace(/"/g, '&quot;')}" required class="bg-[#111] border border-neutral-700 rounded-xl p-3 text-xs text-white focus:outline-none"></div>
+                <div class="flex flex-col gap-1"><label class="text-[10px] text-gray-500 font-bold ml-1">${T.landingLink}</label><input type="url" id="form-link" value="${item.link || ''}" class="bg-[#111] border border-neutral-700 rounded-xl p-3 text-xs text-white focus:outline-none"></div>
+                <div class="flex flex-col gap-1"><label class="text-[10px] text-gray-500 font-bold ml-1">${T.thumbUrl}</label><div class="flex gap-2"><input type="url" id="form-img" value="${item.img || ''}" class="flex-1 bg-[#111] border border-neutral-700 rounded-xl p-3 text-xs text-white focus:outline-none"><button type="button" id="btn-extract" onclick="extractThumbnail()" class="shrink-0 bg-neutral-800 hover:bg-neutral-700 px-4 py-2 rounded-xl text-xs font-bold text-gray-300 transition-colors flex items-center gap-1"><i data-lucide="image-plus" class="w-4 h-4"></i> ${T.extract}</button></div></div>
+                <div class="flex justify-end gap-2 mt-4"><button type="button" onclick="closeAdminModal()" class="px-5 py-2.5 text-xs bg-neutral-800 hover:bg-neutral-700 rounded-xl font-bold text-gray-300 transition-colors">${T.cancel}</button><button type="submit" id="modal-save-btn" class="px-5 py-2.5 text-xs bg-red-600 hover:bg-red-500 rounded-xl font-bold text-white shadow-lg shadow-red-900/40 transition-colors">${T.save}</button></div>
+              </form>
+            </div>
+          `;
+        }
+      } else {
+        // 사용자 모드 UI (아카이브, 키워드, 캘린더)
+        const tabs = [{ id: 'archive', icon: 'folder', label: T.archive }, { id: 'keyword', icon: 'heart', label: T.keyword }, { id: 'calendar', icon: 'calendar', label: T.calendar }];
+        mainTabsContainer.innerHTML = tabs.map(tab => `<button onclick="setMainTab('${tab.id}')" class="flex-1 flex justify-center items-center gap-1.5 py-3 text-sm font-bold border-b-2 transition-colors ${state.activeMainTab === tab.id ? 'border-red-600 text-white' : 'border-transparent text-gray-500'}"><i data-lucide="${tab.icon}" class="w-4 h-4"></i>${tab.label}</button>`).join('');
+        document.getElementById('search-container').style.display = 'block';
+
+        if (state.activeMainTab === 'keyword') {
+          let keywordData = MOCK_ARCHIVE_DATA.filter(item => { if (state.activeKeyword === '전체') return item.rawKeywords && item.rawKeywords.trim() !== ''; return (item.rawKeywords === state.activeKeyword); });
+          keywordData = getSortedData(getSearchFilteredData(keywordData));
+          const visibleData = keywordData.slice(0, state.displayLimit);
+          contentHTML = `
+            <div class="flex gap-2 overflow-x-auto scrollbar-hide mb-4 pb-1">
+              ${['전체', ...KEYWORDS].map(kw => `<button onclick="setKeyword('${kw}')" class="whitespace-nowrap px-3 py-1 rounded-full text-[11px] border ${state.activeKeyword === kw ? 'bg-red-600 border-red-600 text-white font-bold' : 'border-neutral-600 text-gray-400 font-medium'} transition-all">${kw === '전체' ? T.all : getT(kw)}</button>`).join('')}
+            </div>
+            <div class="flex justify-between items-center mb-4 text-xs text-gray-400"><span>${T.total} ${keywordData.length}${T.unit}</span><button onclick="toggleSort()" class="flex items-center gap-1"><i data-lucide="arrow-up-down" class="w-3 h-3"></i>${state.sortOrder === 'desc' ? T.latest : T.oldest}</button></div>
+            <div class="grid grid-cols-2 gap-3">${visibleData.map(item => createCardHTML(item)).join('')}</div>
+            ${keywordData.length > state.displayLimit ? `<button onclick="loadMore()" class="w-full mt-8 py-3 bg-[#1a1a1a] border border-neutral-800 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition-colors">${T.more}</button>` : ''}
+          `;
+        } else if (state.activeMainTab === 'archive') {
+          let archiveData = MOCK_ARCHIVE_DATA.filter(item => (state.activeSubTab === '전체 보기' || item.mainType === state.activeSubTab) && (state.activeCategory === '전체' || item.type === state.activeCategory));
+          archiveData = getSortedData(getSearchFilteredData(archiveData));
+          const visibleData = archiveData.slice(0, state.displayLimit);
+          contentHTML = `
+            <div class="flex gap-2 overflow-x-auto scrollbar-hide mb-4 pb-1">${MAIN_TABS_LIST.map(tab => `<button onclick="setSubTab('${tab}')" class="whitespace-nowrap px-3 py-1 rounded-full text-xs border ${state.activeSubTab === tab ? 'bg-neutral-800 border-neutral-600 text-white' : 'border-transparent text-gray-500'}">${getT(tab)}</button>`).join('')}</div>
+            ${state.activeSubTab !== '전체 보기' ? `<div class="bg-[#1a1a1a] rounded-2xl p-3 mb-6 border border-neutral-800"><div class="flex flex-wrap gap-1.5"><button onclick="setCategory('전체')" class="px-2.5 py-1 rounded-full text-[11px] border ${state.activeCategory === '전체' ? 'bg-red-600 border-red-600 text-white' : 'border-neutral-600 text-gray-400'}">${T.all}</button>${(CATEGORIES[state.activeSubTab] || []).map(cat => `<button onclick="setCategory('${cat}')" class="px-2.5 py-1 rounded-full text-[11px] border ${state.activeCategory === cat ? 'bg-red-600 border-red-600 text-white' : 'border-neutral-600 text-gray-400'}">${getT(cat)}</button>`).join('')}</div></div>` : ''}
+            <div class="flex justify-between items-center mb-4 text-xs text-gray-400"><span>${T.total} ${archiveData.length}${T.unit}</span><button onclick="toggleSort()" class="flex items-center gap-1"><i data-lucide="arrow-up-down" class="w-3 h-3"></i>${state.sortOrder === 'desc' ? T.latest : T.oldest}</button></div>
+            <div class="grid grid-cols-2 gap-3">${visibleData.map(item => createCardHTML(item)).join('')}</div>
+            ${archiveData.length > state.displayLimit ? `<button onclick="loadMore()" class="w-full mt-8 py-3 bg-[#1a1a1a] border border-neutral-800 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition-colors">${T.more}</button>` : ''}
+          `;
+        } else if (state.activeMainTab === 'calendar') {
+          const daysInMonth = new Date(state.viewYear, state.viewMonth, 0).getDate();
+          const firstDay = new Date(state.viewYear, state.viewMonth - 1, 1).getDay();
+          const monthKey = `${state.viewYear}-${String(state.viewMonth).padStart(2, '0')}`;
+          const currentMonthData = MOCK_ARCHIVE_DATA.filter(item => item.date && item.date.startsWith(monthKey));
+          const monthlyTotal = currentMonthData.length;
+          const activeDays = currentMonthData.map(item => parseInt(item.date.split('-')[2]));
+          let calGrid = '';
+          for(let i=0; i<firstDay; i++) calGrid += `<div></div>`;
+          for(let d=1; d<=daysInMonth; d++) {
+            const dateStr = `${state.viewYear}-${String(state.viewMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const isSelected = state.selectedDate === dateStr;
+            const isToday = todayStr === dateStr;
+            calGrid += `<div onclick="setSelectedDate('${dateStr}')" class="flex flex-col items-center justify-center h-12 cursor-pointer group"><div class="w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold ${isSelected ? 'bg-red-600 text-white' : isToday ? 'text-red-500 bg-neutral-800' : 'text-gray-300 group-hover:bg-neutral-800'}">${d}</div>${activeDays.includes(d) ? `<div class="w-1 h-1 bg-red-500 rounded-full mt-0.5"></div>` : ''}</div>`;
+          }
+          let dailyData = getSortedData(getSearchFilteredData(currentMonthData));
+          contentHTML = `
+            <div class="animate-in fade-in duration-300">
+              ${getCalendarHeaderHTML()}
+              <div class="grid grid-cols-7 text-[10px] text-gray-500 font-bold mb-2 text-center"><div>${T.daySun}</div><div>${T.dayMon}</div><div>${T.dayTue}</div><div>${T.dayWed}</div><div>${T.dayThu}</div><div>${T.dayFri}</div><div>${T.daySat}</div></div>
+              <div class="grid grid-cols-7 gap-y-1 mb-8">${calGrid}</div>
+              <div class="border-t border-neutral-800 pt-6">
+                <div class="flex items-center gap-2 mb-4 border-l-4 border-red-600 pl-3">
+                  <h3 class="font-bold text-gray-200">${state.viewMonth}${T.month} ${T.total} (${monthlyTotal}${T.unit})</h3>
+                </div>
+                <div class="grid grid-cols-2 gap-3">${dailyData.length > 0 ? dailyData.map(item => createCardHTML(item)).join('') : `<div class="col-span-2 text-center text-gray-500 text-sm py-10">${T.empty}</div>`}</div>
+              </div>
+            </div>
+          `;
+        }
+      }
+      contentArea.innerHTML = contentHTML;
+      lucide.createIcons();
+    }
+
+    loadSheetData();
+  </script>
 </body>
 </html>
