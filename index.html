@@ -215,6 +215,351 @@
                     <p id="gacha-date" class="text-xs text-blue-500 font-medium"></p>
                 </div>
                 
+                <div class="flex flex-col gap-2">
+                    <button id="gacha-link-btn" class="w-full py-3 bg-blue-50 rounded-xl text-blue-600 font-bold active:scale-95 transition-all hidden">↗ 원문 보기</button>
+                    
+                    <div class="flex gap-2">
+                        <button id="gacha-share-btn" class="flex-1 py-3 bg-black rounded-xl text-white font-bold active:scale-95 transition-all flex justify-center items-center gap-1.5">
+                            <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> 
+                            공유하기
+                        </button>
+                        <button onclick="startGacha()" class="flex-1 py-3 bg-gray-100 rounded-xl text-gray-700 font-bold active:scale-95 transition-all">↺ 다시 뽑기</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div id="custom-toast"></div>
+
+    <script>
+        const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRC80s5f91fT_g0tIDmNTTGbhihJqxC6VeNQ643GjbeVB25_-ycP0Tj-uhaz3d4cqOVkjU829dO8TT3/pub?gid=0&single=true&output=csv";
+        const state = { view: 'index', items: [], isLoaded: false };
+
+        function showAlert(msg) {
+            const toast = document.getElementById('custom-toast');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 2500);
+        }
+
+        async function init() {
+            renderGuides();
+            await loadData();
+        }
+
+        function renderGuides() {
+            const guides = [
+                { t: "입덕가이드 처음부터", l: "https://x.com/Penta_1031/status/1809943093581615574" },
+                { t: "2017~2018", l: "https://x.com/Penta_1031/status/1809943211961684028" },
+                { t: "2019", l: "https://x.com/Penta_1031/status/1809943238180253904" },
+                { t: "2020", l: "https://x.com/Penta_1031/status/1809944465689460891" },
+                { t: "2021", l: "https://x.com/Penta_1031/status/1809945536398786840" },
+                { t: "2022", l: "https://x.com/Penta_1031/status/1809946857025740995" },
+                { t: "2023", l: "https://x.com/Penta_1031/status/1812147793760587922" },
+                { t: "2024", l: "https://x.com/Penta_1031/status/1976272580484137218" }
+            ];
+            const container = document.getElementById('guide-list-container');
+            container.innerHTML = guides.map(g => `
+                <button onclick="window.open('${g.l}', '_blank')" class="bg-white rounded-2xl p-4 flex justify-between items-center shadow-sm border border-gray-100 hover:bg-gray-50 active:scale-95 transition-all text-left">
+                    <span class="font-medium text-gray-800 text-[0.95rem]">${g.t}</span>
+                    <span class="text-blue-500 font-normal shrink-0 ml-4">↗</span>
+                </button>
+            `).join('');
+        }
+
+        async function loadData() {
+            try {
+                const response = await fetch(SPREADSHEET_CSV_URL);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const csvText = await response.text();
+                state.items = parseCSV(csvText);
+                state.isLoaded = true;
+                
+                const gachaPool = state.items.filter(item => item.mediaUrl && item.mediaUrl.trim() !== '');
+                document.getElementById('gacha-subtitle').innerText = `${gachaPool.length}개의 떡밥 중 당신이 만날 떡밥은?`;
+            } catch (error) {
+                console.error("Fetch error:", error);
+                showAlert("데이터 동기화 실패. 잠시 후 다시 시도해주세요.");
+            }
+        }
+
+        function parseCSV(str) {
+            const arr = [];
+            const lines = str.split(/\r?\n/);
+            if (lines.length < 2) return arr;
+            
+            const headers = splitCSVLine(lines[0]);
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const values = splitCSVLine(lines[i]);
+                const obj = {};
+                headers.forEach((h, idx) => {
+                    if(!h) return;
+                    let val = (values[idx] || '').trim().replace(/^"|"$/g, '');
+                    let key = h.trim();
+                    if(key === '제목') obj.title = val;
+                    if(key === '날짜') obj.date = val;
+                    if(key === '썸네일') obj.mediaUrl = val.split(/[\s,]+/)[0].trim();
+                    if(key === '링크') obj.link = val;
+                });
+                if(obj.title) arr.push(obj);
+            }
+            return arr;
+        }
+
+        function splitCSVLine(line) {
+            const result = [];
+            let cur = ''; 
+            let inQuote = false;
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') inQuote = !inQuote;
+                else if (char === ',' && !inQuote) { 
+                    result.push(cur); 
+                    cur = ''; 
+                }
+                else cur += char;
+            }
+            result.push(cur); 
+            return result;
+        }
+
+        function navigate(viewName) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById(`view-${viewName}`);
+            if (target) {
+                target.classList.add('active');
+                document.getElementById('app').scrollTop = 0;
+            }
+            if (viewName === 'anniversary') initAnniversary();
+        }
+
+        function initAnniversary() {
+            const list = document.getElementById('anniversary-list');
+            const dateText = document.getElementById('anniversary-date-text');
+            list.innerHTML = '';
+            
+            if(!state.isLoaded) {
+                list.innerHTML = '<p class="text-center py-10 text-gray-400">데이터 로딩 중...</p>';
+                return;
+            }
+            
+            const today = new Date();
+            const m_num = today.getMonth() + 1;
+            const d_num = today.getDate();
+            const m_str = String(m_num).padStart(2, '0');
+            const d_str = String(d_num).padStart(2, '0');
+            
+            dateText.innerText = `${m_num}월 ${d_num}일의 기록`;
+            
+            const matches = state.items.filter(item => {
+                if(!item.date) return false;
+                const d = item.date;
+                return d.includes(`-${m_str}-${d_str}`) || 
+                       d.includes(`-${m_num}-${d_num}`) || 
+                       d.includes(`.${m_str}.${d_str}`) || 
+                       d.includes(`.${m_num}.${d_num}`) ||
+                       d.includes(`${m_num}월 ${d_num}일`) || 
+                       d.includes(`${m_str}월 ${d_str}일`);
+            });
+
+            if (matches.length === 0) {
+                list.innerHTML = `
+                    <div class="bg-white rounded-3xl p-8 text-center border border-gray-100 mt-4">
+                        <p class="text-gray-400 font-medium">기록이 없는 날입니다.</p>
+                    </div>`;
+                return;
+            }
+
+            matches.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "bg-white rounded-2xl p-4 flex gap-4 shadow-sm border border-gray-50 transition-all active:scale-[0.98] cursor-pointer";
+                div.onclick = () => { if(item.link) window.open(item.link, '_blank'); };
+                
+                const imgHtml = item.mediaUrl 
+                    ? `<img src="${item.mediaUrl}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center text-xs text-gray-300\'>No Img</div>'">`
+                    : `<div class="w-full h-full flex items-center justify-center text-xs text-gray-300">No Img</div>`;
+
+                div.innerHTML = `
+                    <div class="w-16 h-16 bg-gray-100 rounded-xl overflow-hidden shrink-0">
+                        ${imgHtml}
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <h3 class="font-bold text-gray-800 text-sm mb-1 line-clamp-2">${item.title}</h3>
+                        <div class="text-xs text-blue-400 font-medium">${item.date}</div>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function startGacha() {
+            const gachaPool = state.items.filter(item => item.mediaUrl && item.mediaUrl.trim() !== '');
+            if(gachaPool.length === 0) {
+                if(!state.isLoaded) return showAlert("데이터 로딩 중입니다...");
+                return showAlert("뽑을 수 있는 기록이 없습니다.");
+            }
+            
+            navigate('gachaLoading');
+            
+            setTimeout(() => {
+                const item = gachaPool[Math.floor(Math.random() * gachaPool.length)];
+                
+                const mediaContainer = document.getElementById('gacha-media');
+                mediaContainer.innerHTML = `<img src="${item.mediaUrl}" class="media-cover" onerror="this.src='https://via.placeholder.com/400?text=Image+Load+Error'">`;
+                
+                document.getElementById('gacha-title').innerText = item.title;
+                document.getElementById('gacha-date').innerText = item.date || '';
+                
+                const linkBtn = document.getElementById('gacha-link-btn');
+                const shareBtn = document.getElementById('gacha-share-btn');
+
+                if(item.link) { 
+                    linkBtn.onclick = () => window.open(item.link, '_blank'); 
+                    linkBtn.classList.remove('hidden'); 
+                } else {
+                    linkBtn.classList.add('hidden');
+                }
+
+                // 트위터 공유 버튼 처리 (제목, 해시태그 제거 및 원문 링크 연결)
+                shareBtn.onclick = () => {
+                    const text = "나의 오늘의 혚쾌는?";
+                    const url = item.link || "https://hq-record.vercel.app/";
+                    
+                    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+                    window.open(twitterUrl, '_blank');
+                };
+                
+                navigate('gachaResult');
+            }, 800);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
+
+
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased selection:bg-blue-200">
+
+    <div id="app" class="app-container no-scrollbar">
+        
+        <!-- 메인 홈 섹션 -->
+        <div id="view-index" class="view-section active p-4 pt-8"> 
+            <div class="text-center mb-6 mt-2">
+                <img src="https://pbs.twimg.com/profile_banners/1355963394403172352/1766513408/1500x500" class="w-16 h-16 mx-auto mb-3 rounded-full object-cover shadow-md border-2 border-white" alt="Profile" onerror="this.src='https://via.placeholder.com/150?text=HQ'">
+                <h1 class="text-[1.4rem] font-bold tracking-tight text-gray-900">혚쾌 레코드</h1>
+            </div>
+
+            <div class="flex flex-col gap-2.5 mb-4">
+                <button onclick="navigate('guide')" class="cloud-menu-card text-left w-full group">
+                    <div class="text-xl mr-3 w-8 text-center">🔰</div>
+                    <div class="flex-1">
+                        <h2 class="font-semibold text-gray-800 text-[0.95rem] mb-0.5">혚쾌 입덕가이드</h2>
+                        <p class="text-[0.75rem] text-gray-400 font-normal">처음 오신 분들을 위한 안내서</p>
+                    </div>
+                    <div class="text-blue-500 font-medium group-hover:translate-x-1 transition-transform">↗</div>
+                </button>
+
+                <button onclick="window.open('https://hq-archive.vercel.app/', '_blank')" class="cloud-menu-card text-left w-full group">
+                    <div class="text-xl mr-3 w-8 text-center">📂</div>
+                    <div class="flex-1">
+                        <h2 class="font-semibold text-gray-800 text-[0.95rem] mb-0.5">혚쾌 아카이브</h2>
+                        <p class="text-[0.75rem] text-gray-400 font-normal">모든 떡밥 모아보기</p>
+                    </div>
+                    <div class="text-blue-500 font-medium group-hover:translate-x-1 transition-transform">↗</div>
+                </button>
+
+                <button onclick="window.open('https://hqworldcup.vercel.app/', '_blank')" class="cloud-menu-card text-left w-full group">
+                    <div class="text-xl mr-3 w-8 text-center">🏆</div>
+                    <div class="flex-1">
+                        <h2 class="font-semibold text-gray-800 text-[0.95rem] mb-0.5">혚쾌 월드컵</h2>
+                        <p class="text-[0.75rem] text-gray-400 font-normal">혚쾌러가 선택한 최고의 떡밥은?</p>
+                    </div>
+                    <div class="text-blue-500 font-medium group-hover:translate-x-1 transition-transform">↗</div>
+                </button>
+
+                <button onclick="navigate('anniversary')" class="cloud-menu-card text-left w-full group">
+                    <div class="text-xl mr-3 w-8 text-center">🕰️</div>
+                    <div class="flex-1">
+                        <h2 class="font-semibold text-gray-800 text-[0.95rem] mb-0.5">N년전 오늘의 혚쾌</h2>
+                        <p class="text-[0.75rem] text-gray-400 font-normal">과거의 오늘 어떤 떡밥이 있었을까?</p>
+                    </div>
+                    <div class="text-blue-500 font-medium group-hover:translate-x-1 transition-transform">↗</div>
+                </button>
+
+                <button onclick="navigate('gachaHome')" class="cloud-menu-card text-left w-full group">
+                    <div class="text-xl mr-3 w-8 text-center">🍀</div>
+                    <div class="flex-1">
+                        <h2 class="font-semibold text-gray-800 text-[0.95rem] mb-0.5">오늘의 혚쾌 뽑기</h2>
+                        <p class="text-[0.75rem] text-gray-400 font-normal">행운의 랜덤 혚쾌 뽑기</p>
+                    </div>
+                    <div class="text-blue-500 font-medium group-hover:translate-x-1 transition-transform">↗</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- 입덕가이드 섹션 -->
+        <div id="view-guide" class="view-section p-5 pt-12 bg-theme-blue">
+            <button onclick="navigate('index')" class="text-left text-sm text-gray-500 hover:text-gray-800 mb-6 font-normal">← 메인으로</button>
+            <div class="mb-6">
+                <h1 class="text-xl font-bold text-gray-900">입덕가이드</h1>
+                <p class="text-gray-500 text-sm mt-1 font-normal">원하는 타래를 선택해 보세요!</p>
+            </div>
+            <div class="flex flex-col gap-3 pb-10" id="guide-list-container"></div>
+        </div>
+
+        <!-- N년전 오늘 섹션 -->
+        <div id="view-anniversary" class="view-section p-5 pt-12 bg-theme-blue">
+            <button onclick="navigate('index')" class="text-left text-sm text-gray-500 hover:text-gray-800 mb-6 font-medium">← 메인으로</button>
+            <div class="mb-6">
+                <h1 class="text-2xl font-bold text-gray-900">N년전 오늘</h1>
+                <p id="anniversary-date-text" class="text-blue-500 font-bold text-sm mt-1"></p>
+            </div>
+            <div id="anniversary-list" class="flex flex-col gap-3 pb-10"></div>
+        </div>
+
+        <!-- 뽑기 홈 섹션 -->
+        <div id="view-gachaHome" class="view-section p-5 pt-12">
+            <button onclick="navigate('index')" class="text-left text-sm text-gray-500 hover:text-gray-800 mb-10 font-medium">← 메인으로</button>
+            <div class="text-center mb-8 mt-10">
+                <div class="text-6xl mb-4">🍀</div>
+                <h1 class="text-2xl font-bold text-gray-900">오늘의 혚쾌 뽑기</h1>
+                <p id="gacha-subtitle" class="text-gray-400 text-sm mt-2">기록 로딩 중...</p>
+            </div>
+            <button onclick="startGacha()" class="w-full bg-[#e8f5e9] text-[#2e7d32] border border-[#c8e6c9] rounded-3xl py-5 font-bold text-lg shadow-sm hover:bg-[#c8e6c9] active:scale-95 transition-all">
+                오늘 당신이 만날 혚쾌는?
+            </button>
+        </div>
+
+        <!-- 뽑기 로딩 섹션 -->
+        <div id="view-gachaLoading" class="view-section p-5 items-center justify-center">
+            <div class="w-12 h-12 border-4 border-gray-100 border-t-blue-500 rounded-full animate-spin"></div>
+            <p class="text-lg font-bold text-gray-700 mt-6">뽑는 중...</p>
+        </div>
+
+        <!-- 뽑기 결과 섹션 -->
+        <div id="view-gachaResult" class="view-section p-4 items-center justify-center bg-black/30 backdrop-blur-md fixed inset-0 z-50">
+            <div class="bg-white rounded-[2rem] w-full max-w-[400px] p-4 relative shadow-2xl">
+                <button onclick="navigate('gachaHome')" class="absolute top-4 right-4 text-gray-400 p-2 text-xl bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center">✕</button>
+                <div class="w-full aspect-square bg-gray-50 rounded-[1.5rem] overflow-hidden mb-6 mt-8 border border-gray-100">
+                    <div id="gacha-media" class="w-full h-full"></div>
+                </div>
+                <div class="text-center mb-6">
+                    <h2 id="gacha-title" class="text-[1.1rem] font-bold mb-2 break-keep text-gray-800 px-4"></h2>
+                    <p id="gacha-date" class="text-xs text-blue-500 font-medium"></p>
+                </div>
+                
                 <!-- 버튼 영역 수정: 트위터 공유 추가 -->
                 <div class="flex flex-col gap-2">
                     <button id="gacha-link-btn" class="w-full py-3 bg-blue-50 rounded-xl text-blue-600 font-bold active:scale-95 transition-all hidden">↗ 원문 보기</button>
