@@ -69,7 +69,7 @@
         </div>
       </div>
 
-      <div id="search-container" class="relative mb-2 transition-all">
+      <div id="search-container" class="relative transition-all">
         <div class="relative">
           <i data-lucide="search" class="w-[18px] h-[18px] absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
           <input 
@@ -82,6 +82,9 @@
         </div>
         <div id="search-hint" class="text-[11px] text-gray-500 mt-2 px-2"></div>
       </div>
+      
+      <!-- 아카이브 이용 가이드 영역 (검색창 바로 아래) -->
+      <div id="guide-wrapper"></div>
     </header>
 
     <nav id="main-tabs" class="flex px-4 overflow-x-auto scrollbar-hide border-b border-neutral-800 bg-[#111111] shrink-0"></nav>
@@ -135,6 +138,7 @@
         guideCalendar: "점이 표시된 날짜를 클릭하면 해당 날짜의 기록을 모아볼 수 있습니다.",
         guideFilter: "카테고리와 상세 분류를 통해 원하는 영상을 빠르게 찾아보세요.",
         guideContact: "오류 및 기타 문의사항은 @Penta_1031로 문의해 주세요.",
+        scrollHint: "옆으로 넘겨보세요",
         categories: {
           '무대영상': '무대영상', '라이브': '라이브', '유튜브': '유튜브', '미디어': '미디어', 'SNS': 'SNS', '메시지': '메시지', '기타': '기타', '전체 보기': '전체 보기',
           '음악방송': '음악방송', '직캠': '직캠', '콘서트': '콘서트', '페스티벌': '페스티벌', '대학축제': '대학축제', '버스킹': '버스킹', '쇼케이스': '쇼케이스', '팬미팅': '팬미팅', '팬싸인회': '팬싸인회', '공항/퇴근길': '공항/퇴근길', '해외투어': '해외투어', '킹덤': '킹덤',
@@ -162,6 +166,7 @@
         guideCalendar: "Click on dates with dots to see records for that day.",
         guideFilter: "Quickly find videos through categories and detailed filters.",
         guideContact: "For errors and other inquiries, please contact @Penta_1031.",
+        scrollHint: "Swipe to see more",
         categories: {
           '무대영상': 'Performance', '라이브': 'Live', '유튜브': 'YouTube', '미디어': 'Media', 'SNS': 'SNS', '메시지': 'Message', '기타': 'ETC', '전체 보기': 'View All',
           '음악방송': 'Music Show', '직캠': 'Fancam', '콘서트': 'Concert', '페스티벌': 'Festival', '대학축제': 'Univ Festival', '버스킹': 'Busking', '쇼케이스': 'Showcase', '팬미팅': 'Fanmeeting', '팬싸인회': 'Fansign', '공항/퇴근길': 'Airport/Exit', '해외투어': 'World Tour', '킹덤': 'Kingdom',
@@ -189,6 +194,7 @@
         guideCalendar: "点击带点的日期即可查看当天的记录。",
         guideFilter: "通过类别和详细筛选快速找到您想要的视频。",
         guideContact: "错误及其他咨询请联系 @Penta_1031。",
+        scrollHint: "向侧边滑动查看更多",
         categories: {
           '무대영상': '舞台视频', '라이브': '直播', '유튜브': 'YouTube', '미디어': '媒体', 'SNS': '社群', '메시지': '消息', '기타': '其他', '전체 보기': '全部显示',
           '음악방송': '打歌节目', '직캠': '直拍', '콘서트': '演唱会', '페스티벌': '音乐节', '대학축제': '大学庆典', '버스킹': '路演', '쇼케이스': 'Showcase', '팬미팅': '见面会', '팬싸인회': '签售会', '공항/퇴근길': '机场/下班', '해외투어': '海外巡演', '킹덤': 'Kingdom',
@@ -208,7 +214,7 @@
         empty: "記録がありません。", add: "+ 追加", save: "保存", cancel: "Cancel", edit: "編集", delete: "삭제",
         year: "年", month: "月", daySun: "日", dayMon: "月", dayTue: "화", dayWed: "水", dayThu: "목", dayFri: "金", daySat: "土",
         importTitle: "外部データ管理", importId: "アカウントフィルタ (任意)", importStart: "開始日", importEnd: "終了日", importBtn: "Rawデータ取得",
-        postBtn: "投稿する", extract: "抽出", landingLink: "링크", thumbUrl: "サムネイル URL", title: "タイトル", date: "日付", mainCat: "大分類", subCat: "小分類", keywordCat: "キーワード",
+        postBtn: "投稿する", extract: "抽出", landingLink: "リンク", thumbUrl: "サムサムネイル URL", title: "タイトル", date: "日付", mainCat: "大分類", subCat: "小分類", keywordCat: "キーワード",
         passwordTitle: "管理者認証", passwordPlaceholder: "パスワードを入力", passwordBtn: "確認", passwordError: "パスワード가 틀렸습니다.",
         goToMain: "メインへ戻る",
         guideTitle: "アーカイブ利用ガイド",
@@ -216,6 +222,7 @@
         guideCalendar: "点が表示された日付をクリックすると、その日の記録をまとめて表示します。",
         guideFilter: "カテゴリーと詳細分類を通じて、目的の動画を素早く見つけてください。",
         guideContact: "エラーおよびその他のお問い合わせは @Penta_1031 までお願いいたします。",
+        scrollHint: "横にスワイプして表示",
         categories: {
           '무대영상': 'ステージ', '라이브': 'ライブ', '유튜브': 'YouTube', '미디어': 'メディア', 'SNS': 'SNS', '메시지': 'メッセージ', '기타': 'その他', '전체 보기': 'すべて表示',
           '음악방송': '音楽番組', '직캠': 'ファンカム', '콘서트': 'コンサート', 'フェ스': 'フェ스', '学祭': '学祭', '路上ライブ': '路上ライブ', 'ショーケース': 'ショーケース', 'ファン미': 'ファンミ', 'サイン会': 'サイン会', '空港/出勤': '空港/出勤', '海外ツアー': '海外ツアー', 'KINGDOM': 'KINGDOM',
@@ -239,6 +246,7 @@
       activeMainTab: 'archive', 
       activeSubTab: '전체 보기',
       activeCategory: '전체',
+      activeCategoryMap: {}, // 메인 카테고리별 서브 카테고리 상태 저장
       selectedDate: todayStr,
       activeKeyword: '전체',
       viewYear: now.getFullYear(),
@@ -277,8 +285,20 @@
     window.setLanguage = (code) => { state.lang = code; render(); };
     window.setMainTab = (tabId) => { state.activeMainTab = tabId; state.displayLimit = 30; render(); };
     window.setAdminTab = (tabId) => { state.adminTab = tabId; state.displayLimit = 30; render(); };
-    window.setSubTab = (tab) => { state.activeSubTab = tab; state.activeCategory = '전체'; state.displayLimit = 30; render(); };
-    window.setCategory = (cat) => { state.activeCategory = cat; state.displayLimit = 30; render(); };
+    window.setSubTab = (tab) => { 
+      state.activeSubTab = tab; 
+      // 이전 선택 상태가 있으면 복원, 없으면 '전체'로 설정
+      state.activeCategory = state.activeCategoryMap[tab] || '전체'; 
+      state.displayLimit = 30; 
+      render(); 
+    };
+    window.setCategory = (cat) => { 
+      state.activeCategory = cat; 
+      // 현재 메인 카테고리에서의 선택 상태 저장
+      state.activeCategoryMap[state.activeSubTab] = cat;
+      state.displayLimit = 30; 
+      render(); 
+    };
     window.setSelectedDate = (date) => { state.selectedDate = (state.selectedDate === date) ? null : date; render(); };
     window.setKeyword = (kw) => { state.activeKeyword = kw; state.displayLimit = 30; render(); };
     window.handleSearch = (e) => { state.searchTerm = e.target.value; state.displayLimit = 30; render(); };
@@ -900,10 +920,10 @@
     }
 
     function getGuideHTML() {
-      if (!state.showGuide) return `<div class="mb-4 text-right px-2"><button onclick="toggleGuide()" class="text-[10px] font-bold text-gray-500 flex items-center gap-1 justify-end ml-auto"><i data-lucide="info" class="w-3 h-3"></i> ${getGuideT('guideTitle')}</button></div>`;
+      if (!state.showGuide) return `<div class="mt-3 mb-0 text-right px-1"><button onclick="toggleGuide()" class="text-[10px] font-bold text-gray-500 hover:text-gray-400 transition-colors flex items-center gap-1 justify-end ml-auto"><i data-lucide="info" class="w-3 h-3"></i> ${getGuideT('guideTitle')}</button></div>`;
       
       return `
-        <div class="bg-neutral-900/50 border border-neutral-800 rounded-2xl p-4 mb-6 animate-in fade-in slide-in-from-top-2 duration-300 relative">
+        <div class="mt-3 bg-neutral-900/50 border border-neutral-800 rounded-2xl p-4 animate-in fade-in slide-in-from-top-2 duration-300 relative shadow-md">
           <button onclick="toggleGuide()" class="absolute top-3 right-3 text-gray-500 hover:text-white transition-colors"><i data-lucide="x" class="w-4 h-4"></i></button>
           <h2 class="text-sm font-bold text-white flex items-center gap-2 mb-4">
             <i data-lucide="info" class="w-4 h-4 text-red-500"></i>
@@ -952,6 +972,12 @@
       if(searchInput) searchInput.placeholder = T.searchPlaceholder;
       const searchHint = document.getElementById('search-hint');
       if(searchHint) searchHint.innerText = T.searchHint;
+
+      // 가이드 렌더링 (검색창 밑 고정 영역)
+      const guideWrapper = document.getElementById('guide-wrapper');
+      if (guideWrapper) {
+        guideWrapper.innerHTML = state.isAdminMode ? '' : getGuideHTML();
+      }
 
       const mainTabsContainer = document.getElementById('main-tabs');
       const contentArea = document.getElementById('content-area');
@@ -1179,8 +1205,11 @@
           keywordData = getSortedData(getSearchFilteredData(keywordData));
           const visibleData = keywordData.slice(0, state.displayLimit);
           contentHTML = `
+            <div class="flex justify-end mb-1 pr-1">
+              <span class="text-[8px] text-neutral-500 flex items-center gap-0.5 font-bold tracking-tight">${T.scrollHint} <i data-lucide="arrow-right" class="w-2.5 h-2.5"></i></span>
+            </div>
             <div class="flex gap-2 overflow-x-auto scrollbar-hide mb-4 pb-1">
-              ${['전체', ...KEYWORDS].map(kw => `<button onclick="setKeyword('${kw}')" class="whitespace-nowrap px-3 py-1 rounded-full text-[11px] border ${state.activeKeyword === kw ? 'bg-red-600 border-red-600 text-white font-bold' : 'border-neutral-600 text-gray-400 font-medium'} transition-all">${kw === '전체' ? T.all : getT(kw)}</button>`).join('')}
+              ${['전체', ...KEYWORDS].map(kw => `<button onclick="setKeyword('${kw}')" class="whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold border ${state.activeKeyword === kw ? 'bg-neutral-800 border-neutral-600 text-white' : 'border-transparent text-gray-500'}">${kw === '전체' ? T.all : getT(kw)}</button>`).join('')}
             </div>
             <div class="flex justify-between items-center mb-4 text-xs text-gray-400"><span>${T.total} ${keywordData.length}${T.unit}</span><button onclick="toggleSort()" class="flex items-center gap-1"><i data-lucide="arrow-up-down" class="w-3 h-3"></i>${state.sortOrder === 'desc' ? T.latest : T.oldest}</button></div>
             <div class="grid grid-cols-2 gap-3">${visibleData.map(item => createCardHTML(item)).join('')}</div>
@@ -1191,9 +1220,18 @@
           archiveData = getSortedData(getSearchFilteredData(archiveData));
           const visibleData = archiveData.slice(0, state.displayLimit);
           contentHTML = `
-            ${getGuideHTML()}
-            <div class="flex gap-2 overflow-x-auto scrollbar-hide mb-4 pb-1">${MAIN_TABS_LIST.map(tab => `<button onclick="setSubTab('${tab}')" class="whitespace-nowrap px-3 py-1 rounded-full text-xs border ${state.activeSubTab === tab ? 'bg-neutral-800 border-neutral-600 text-white' : 'border-transparent text-gray-500'}">${getT(tab)}</button>`).join('')}</div>
-            ${state.activeSubTab !== '전체 보기' ? `<div class="bg-[#1a1a1a] rounded-2xl p-3 mb-6 border border-neutral-800"><div class="flex wrap gap-1.5"><button onclick="setCategory('전체')" class="px-2.5 py-1 rounded-full text-[11px] border ${state.activeCategory === '전체' ? 'bg-red-600 border-red-600 text-white' : 'border-neutral-600 text-gray-400'}">${T.all}</button>${(CATEGORIES[state.activeSubTab] || []).map(cat => `<button onclick="setCategory('${cat}')" class="px-2.5 py-1 rounded-full text-[11px] border ${state.activeCategory === cat ? 'bg-red-600 border-red-600 text-white' : 'border-neutral-600 text-gray-400'}">${getT(cat)}</button>`).join('')}</div></div>` : ''}
+            <div class="flex justify-end mb-1 pr-1">
+              <span class="text-[8px] text-neutral-500 flex items-center gap-0.5 font-bold tracking-tight">${T.scrollHint} <i data-lucide="arrow-right" class="w-2.5 h-2.5"></i></span>
+            </div>
+            <div class="flex gap-2 overflow-x-auto scrollbar-hide mb-3 pb-1">${MAIN_TABS_LIST.map(tab => `<button onclick="setSubTab('${tab}')" class="whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold border ${state.activeSubTab === tab ? 'bg-neutral-800 border-neutral-600 text-white' : 'border-transparent text-gray-500'}">${getT(tab)}</button>`).join('')}</div>
+            ${state.activeSubTab !== '전체 보기' ? `
+              <div class="mb-6 -mt-1">
+                <div class="flex flex-wrap gap-1.5">
+                  <button onclick="setCategory('전체')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${state.activeCategory === '전체' ? 'bg-red-600 text-white shadow-md shadow-red-900/20' : 'bg-[#1a1a1a] border border-neutral-800 text-gray-400 hover:border-neutral-600 hover:text-gray-200'}">${T.all}</button>
+                  ${(CATEGORIES[state.activeSubTab] || []).map(cat => `<button onclick="setCategory('${cat}')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${state.activeCategory === cat ? 'bg-red-600 text-white shadow-md shadow-red-900/20' : 'bg-[#1a1a1a] border border-neutral-800 text-gray-400 hover:border-neutral-600 hover:text-gray-200'}">${getT(cat)}</button>`).join('')}
+                </div>
+              </div>
+            ` : ''}
             <div class="flex justify-between items-center mb-4 text-xs text-gray-400"><span>${T.total} ${archiveData.length}${T.unit}</span><button onclick="toggleSort()" class="flex items-center gap-1"><i data-lucide="arrow-up-down" class="w-3 h-3"></i>${state.sortOrder === 'desc' ? T.latest : T.oldest}</button></div>
             <div class="grid grid-cols-2 gap-3">${visibleData.map(item => createCardHTML(item)).join('')}</div>
             ${archiveData.length > state.displayLimit ? `<button onclick="loadMore()" class="w-full mt-8 py-3 bg-[#1a1a1a] border border-neutral-800 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition-colors">${T.more}</button>` : ''}
