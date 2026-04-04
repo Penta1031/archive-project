@@ -4,6 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HQ ARCHIVE</title>
+  
+  <meta name="description" content="엔플라잉(N.Flying) 아카이브 보관소입니다.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hq-record.vercel.app/">
+  <meta property="og:title" content="HQ ARCHIVE">
+  <meta property="og:description" content="엔플라잉(N.Flying)의 모든 기록을 모아두는 아카이브입니다.">
+  <meta property="og:image" content="https://pbs.twimg.com/media/HFCPMJ5aYAA_00z?format=jpg&name=large">
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://hq-record.vercel.app/">
+  <meta name="twitter:title" content="HQ ARCHIVE">
+  <meta name="twitter:description" content="엔플라잉(N.Flying)의 모든 기록을 모아두는 아카이브입니다.">
+  <meta name="twitter:image" content="https://pbs.twimg.com/media/HFCPMJ5aYAA_00z?format=jpg&name=large">
+  
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -83,7 +97,6 @@
         <div id="search-hint" class="text-[11px] text-gray-500 mt-2 px-2"></div>
       </div>
       
-      <!-- 아카이브 이용 가이드 영역 (검색창 바로 아래) -->
       <div id="guide-wrapper"></div>
     </header>
 
@@ -105,7 +118,7 @@
     const now = new Date();
     const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
-    // ✅ 최종 이미지 데이터 기반 카테고리 업데이트
+    // ✅ 최종 이미지 데이터 기반 카테고리 업데이트 (정렬 완료)
     const CATEGORIES = {
       '무대영상': ['공항/퇴근길', '대학축제', '버스킹', '쇼케이스', '음악방송', '직캠', '콘서트', '킹덤', '팬미팅', '팬싸인회', '페스티벌', '해외투어'],
       '라이브': ['개인 라이브', '기타 라이브', '단체 라이브', '승구리당당', '승협이 라이브', '우리 얘기 좀 합시다', '인스타그램 라이브', '하루의 마무리'],
@@ -140,20 +153,21 @@
         guideContact: "오류 및 기타 문의사항은 @Penta_1031로 문의해 주세요.",
         scrollHint: "옆으로 넘겨보세요",
         categories: {
-          '무대영상': '무대영상', '라이브': '라이브', '유튜브': '유튜브', '미디어': '미디어', 'SNS': 'SNS', '메시지': '메시지', '기타': '기타', '전체 보기': '전체 보기',
-          '음악방송': '음악방송', '직캠': '직캠', '콘서트': '콘서트', '페스티벌': '페스티벌', '대학축제': '대학축제', '버스킹': '버스킹', '쇼케이스': '쇼케이스', '팬미팅': '팬미팅', '팬싸인회': '팬싸인회', '공항/퇴근길': '공항/퇴근길', '해외투어': '해외투어', '킹덤': '킹덤',
-          '하루의 마무리': '하루의 마무리', '승협이 라이브': '승협이 라이브', '승구리당당': '승구리당당', '우리 얘기 좀 합시다': '우리 얘기 좀 합시다', '개인 라이브': '개인 라이브', '단체 라이브': '단체 라이브', '인스타그램 라이브': '인스타그램 라이브', '기타 라이브': '기타 라이브',
-          '뮤직비디오': '뮤직비디오', '메이킹': '메이킹', '비하인드': '비하인드', '레코딩로그': '레코딩로그', '승캠': '승캠', '승협이': '승협이', '합주일지': '합주일지', '커버곡': '커버곡', '스페셜클립': '스페셜클립', '쇼츠': '쇼츠', '엔킷리스트': '엔피아 모집', '버킷리스트': '버킷리스트',
-          '방송/예능': '방송/예능', '라디오': '라디오', '인터뷰': '인터뷰', '잡지/화보': '잡지/화보', '웹예능/웹컨텐츠': '웹예능/웹컨텐츠',
-          '공식 트위터': '공식 트위터', '개인 인스타그램': '개인 인스타그램', '공식 인스타그램': '공식 인스타그램', '릴스': '릴스', '틱톡': '틱톡', '공식 카페': '공식 카페', '공식 블로그': '공식 블로그',
-          '버블': '버블', '프롬': '프롬', '연말결산': '연말결산', '백업': '백업', '목격담': '목격담',
-          '모음집': '모음집', '이마키스': '이마키스', '질투': '질투', '친지마': '친지마', '투샷': '투샷', '셀카': '셀카', '하크잖': '하크잖', '커플템': '커플템'
+          '전체 보기': '전체 보기', '무대영상': '무대영상', '라이브': '라이브', '메시지': '메시지', '유튜브': '유튜브', 'SNS': 'SNS', '미디어': '미디어', '기타': '기타',
+          '공항/퇴근길': '공항/퇴근길', '대학축제': '대학축제', '버스킹': '버스킹', '쇼케이스': '쇼케이스', '음악방송': '음악방송', '직캠': '직캠', '콘서트': '콘서트', '킹덤': '킹덤', '팬미팅': '팬미팅', '팬싸인회': '팬싸인회', '페스티벌': '페스티벌', '해외투어': '해외투어',
+          '개인 라이브': '개인 라이브', '기타 라이브': '기타 라이브', '단체 라이브': '단체 라이브', '승구리당당': '승구리당당', '승협이 라이브': '승협이 라이브', '우리 얘기 좀 합시다': '우리 얘기 좀 합시다', '인스타그램 라이브': '인스타그램 라이브', '하루의 마무리': '하루의 마무리',
+          '버블': '버블', '프롬': '프롬',
+          '레코딩로그': '레코딩로그', '메이킹': '메이킹', '뮤직비디오': '뮤직비디오', '버킷리스트': '버킷리스트', '비하인드': '비하인드', '쇼츠': '쇼츠', '스페셜클립': '스페셜클립', '승캠': '승캠', '승협이': '승협이', '엔킷리스트': '엔피아 모집', '커버곡': '커버곡', '합주일지': '합주일지',
+          '개인 인스타그램': '개인 인스타그램', '공식 블로그': '공식 블로그', '공식 인스타그램': '공식 인스타그램', '공식 카페': '공식 카페', '공식 트위터': '공식 트위터', '릴스': '릴스',
+          '라디오': '라디오', '방송/예능': '방송/예능', '웹예능/웹컨텐츠': '웹예능/웹컨텐츠', '인터뷰': '인터뷰', '잡지/화보': '잡지/화보',
+          '목격담': '목격담', '모음집': '모음집', '백업': '백업', '연말결산': '연말결산',
+          '이마키스': '이마키스', '질투': '질투', '친지마': '친지마', '투샷': '투샷', '셀카': '셀카', '하크잖': '하크잖', '커플템': '커플템'
         }
       },
       en: {
         archive: "Archive", keyword: "Keyword", calendar: "Calendar",
         listAdmin: "List", calAdmin: "Calendar", importAdmin: "Import",
-        searchPlaceholder: "Search...", searchHint: "💡 Try: 2023-05-22, Fancam, Music",
+        searchPlaceholder: "Search...", searchHint: "💡 추천 검색: 2023-05-22, ㅇㅇㅎ, 하크잖",
         all: "All", total: "Total", unit: "items", more: "Load More (+)", latest: "Latest", oldest: "Oldest",
         empty: "No records found.", add: "+ Add", save: "Save", cancel: "Cancel", edit: "Edit", delete: "Delete",
         year: "", month: "", daySun: "SUN", dayMon: "MON", dayTue: "TUE", dayWed: "WED", dayThu: "THU", dayFri: "FRI", daySat: "SAT",
@@ -162,26 +176,27 @@
         passwordTitle: "Admin Auth", passwordPlaceholder: "Enter password", passwordBtn: "Confirm", passwordError: "Incorrect password.",
         goToMain: "Back to Home",
         guideTitle: "Archive User Guide",
-        guideSearch: "You can search by date (2024-01-01), initials, or keywords.",
+        guideSearch: "You can search by date (2024-01-01), initials, or keywords. (Please search in Korean)",
         guideCalendar: "Click on dates with dots to see records for that day.",
         guideFilter: "Quickly find videos through categories and detailed filters. (You can scroll the top menus horizontally.)",
         guideContact: "For errors and other inquiries, please contact @Penta_1031.",
         scrollHint: "Swipe to see more",
         categories: {
-          '무대영상': 'Performance', '라이브': 'Live', '유튜브': 'YouTube', '미디어': 'Media', 'SNS': 'SNS', '메시지': 'Message', '기타': 'ETC', '전체 보기': 'View All',
-          '음악방송': 'Music Show', '직캠': 'Fancam', '콘서트': 'Concert', '페스티벌': 'Festival', '대학축제': 'Univ Festival', '버스킹': 'Busking', '쇼케이스': 'Showcase', '팬미팅': 'Fanmeeting', '팬싸인회': 'Fansign', '공항/퇴근길': 'Airport/Exit', '해외투어': 'World Tour', '킹덤': 'Kingdom',
-          '하루의 마무리': 'End of Day', '승협이 라이브': 'Seunghyub Live', '승구리당당': 'Seungguri', '우리 얘기 좀 합시다': 'Lets Talk', '개인 라이브': 'Solo Live', '단체 라이브': 'Group Live', '인스타그램 라이브': 'Insta Live', '기타 라이브': 'Other Live',
-          '뮤직비디오': 'Music Video', '메이킹': 'Making', '비하인드': 'Behind', '레코딩로그': 'Recording Log', '승캠': 'Seung-Cam', '승협이': 'Seunghyub', '합주일지': 'Ensemble Log', '커버곡': 'Covers', '스페셜클립': 'Special Clips', '쇼츠': 'Shorts', '엔킷리스트': 'N.Fia Recruit', '버킷리스트': 'Bucket List',
-          '방송/예능': 'TV Show', '라디오': 'Radio', '인터뷰': 'Interview', '잡지/화보': 'Magazine/Pictorial', '웹예능/웹컨텐츠': 'Web Content',
-          '공식 트위터': 'Official Twitter', '개인 인스타그램': 'Personal IG', '공식 인스타그램': 'Official IG', '릴스': 'Reels', '틱톡': 'TikTok', '공식 카페': 'Fan Cafe', '공식 블로그': 'Official Blog',
-          '버블': 'Bubble', '프롬': 'Fromm', '연말결산': 'Year-end', '백업': 'Backup', '목격담': 'Sighting',
-          '모음집': 'Collection', '이마키스': 'Forehead Kiss', '질투': 'Jealousy', '친지마': 'Chinjima', '투샷': 'Two-shot', '셀카': 'Selfie', '하크잖': 'Heart', '커플템': 'Matching'
+          '전체 보기': 'View All', '무대영상': 'Performance', '라이브': 'Live', '메시지': 'Message', '유튜브': 'YouTube', 'SNS': 'SNS', '미디어': 'Media', '기타': 'ETC',
+          '공항/퇴근길': 'Airport/Exit', '대학축제': 'Univ Festival', '버스킹': 'Busking', '쇼케이스': 'Showcase', '음악방송': 'Music Show', '직캠': 'Fancam', '콘서트': 'Concert', '킹덤': 'Kingdom', '팬미팅': 'Fanmeeting', '팬싸인회': 'Fansign', '페스티벌': 'Festival', '해외투어': 'World Tour',
+          '개인 라이브': 'Solo Live', '기타 라이브': 'Other Live', '단체 라이브': 'Group Live', '승구리당당': 'Seungguri', '승협이 라이브': 'Seunghyub Live', '우리 얘기 좀 합시다': 'Lets Talk', '인스타그램 라이브': 'Insta Live', '하루의 마무리': 'End of Day',
+          '버블': 'Bubble', '프롬': 'Fromm',
+          '레코딩로그': 'Recording Log', '메이킹': 'Making', '뮤직비디오': 'Music Video', '버킷리스트': 'Bucket List', '비하인드': 'Behind', '쇼츠': 'Shorts', '스페셜클립': 'Special Clips', '승캠': 'Seung-Cam', '승협이': 'Seunghyub', '엔킷리스트': 'N.Fia Recruit', '커버곡': 'Covers', '합주일지': 'Ensemble Log',
+          '개인 인스타그램': 'Personal IG', '공식 블로그': 'Official Blog', '공식 인스타그램': 'Official IG', '공식 카페': 'Fan Cafe', '공식 트위터': 'Official Twitter', '릴스': 'Reels',
+          '라디오': 'Radio', '방송/예능': 'TV Show', '웹예능/웹컨텐츠': 'Web Content', '인터뷰': 'Interview', '잡지/화보': 'Magazine/Pictorial',
+          '목격담': 'Sighting', '모음집': 'Collection', '백업': 'Backup', '연말결산': 'Year-end',
+          '이마키스': 'Forehead Kiss', '질투': 'Jealousy', '친지마': 'Chinjima', '투샷': 'Two-shot', '셀카': 'Selfie', '하크잖': 'Heart', '커플템': 'Matching'
         }
       },
       cn: {
         archive: "存档", keyword: "关键词", calendar: "日历",
         listAdmin: "列表", calAdmin: "日历", importAdmin: "导入",
-        searchPlaceholder: "搜索...", searchHint: "💡 建议: 2023-05-22, 舞台, 视频",
+        searchPlaceholder: "搜索...", searchHint: "💡 추천 검색: 2023-05-22, ㅇㅇㅎ, 하크잖",
         all: "全部", total: "共", unit: "个", more: "加载更多 (+)", latest: "最新", oldest: "最早",
         empty: "暂无记录。", add: "+ 添加", save: "保存", cancel: "取消", edit: "编辑", delete: "删除",
         year: "年", month: "月", daySun: "日", dayMon: "一", dayTue: "二", dayWed: "三", dayThu: "四", dayFri: "五", daySat: "六",
@@ -190,48 +205,50 @@
         passwordTitle: "管理员验证", passwordPlaceholder: "输入密码", passwordBtn: "确认", passwordError: "密码错误。",
         goToMain: "回到主页",
         guideTitle: "存档使用指南",
-        guideSearch: "您可以通过日期(2024-01-01)、首字母或关键词进行搜索。",
+        guideSearch: "您可以通过日期(2024-01-01)、首字母或关键词进行搜索。 (请用韩语搜索)",
         guideCalendar: "点击带点的日期即可查看当天的记录。",
         guideFilter: "通过类别和详细筛选快速找到您想要的视频。 (您可以横向滑动顶部菜单。)",
         guideContact: "错误及其他咨询请联系 @Penta_1031。",
         scrollHint: "向侧边滑动查看更多",
         categories: {
-          '무대영상': '舞台视频', '라이브': '直播', '유튜브': 'YouTube', '미디어': '媒体', 'SNS': '社群', '메시지': '消息', '기타': '其他', '전체 보기': '全部显示',
-          '음악방송': '打歌节目', '직캠': '直拍', '콘서트': '演唱会', '페스티벌': '音乐节', '대학축제': '大学庆典', '버스킹': '路演', '쇼케이스': 'Showcase', '팬미팅': '见面会', '팬싸인회': '签售会', '공항/퇴근길': '机场/下班', '해외투어': '海外巡演', '킹덤': 'Kingdom',
-          '하루의 마무리': '一天的结束', '승협이 라이브': '承协直播', '승구리당당': '承协直播2', '우리 얘기 좀 합시다': '聊聊吧', '개인 라이브': '个人直播', '团体直播': '团体直播', 'IG 直播': 'IG 直播', '其他直播': '其他直播',
-          '뮤직비디오': 'MV', '메이킹': '制作', '비하인드': '花絮', '레코딩로그': '录音日志', '승캠': '承Cam', '승협이': '承协', '合奏日志': '合奏日志', '翻唱': '翻唱', '特别片段': '特别片段', 'Shorts': 'Shorts', '招募': '招募', '清单': '清单',
-          '방송/예능': '综艺节目', '라디오': '广播', '인터뷰': '采访', '잡지/화보': '杂志/画报', '网络综艺': '网络综艺',
-          '공식 트위터': '官方推트', '개인 인스타그램': '个人IG', '官方 인스타그램': '官方IG', '릴스': 'Reels', '틱톡': 'TikTok', '官咖': '官咖', '官方博客': '官方博客',
-          '버블': 'Bubble', '프롬': 'Fromm', '연말결산': '年终结算', '백업': '备份', '目击': '目击',
-          '合集': '合集', '额头吻': '额头吻', '嫉妒': '嫉妒', '亲其马': '亲其马', '合影': '合影', '自拍': '自拍', '爱心': '爱心', '情侣款': '情侣款'
+          '전체 보기': '全部显示', '무대영상': '舞台视频', '라이브': '直播', '메시지': '消息', '유튜브': 'YouTube', 'SNS': '社群', '미디어': '媒体', '기타': '其他',
+          '공항/퇴근길': '机场/下班', '대학축제': '大学庆典', '버스킹': '路演', '쇼케이스': 'Showcase', '음악방송': '打歌节目', '직캠': '直拍', '콘서트': '演唱会', '킹덤': 'Kingdom', '팬미팅': '见面会', '팬싸인회': '签售会', '페스티벌': '音乐节', '해외투어': '海外巡演',
+          '개인 라이브': '个人直播', '기타 라이브': '其他直播', '단체 라이브': '团体直播', '승구리당당': '承协直播2', '승협이 라이브': '承协直播', '우리 얘기 좀 합시다': '聊聊吧', '인스타그램 라이브': 'IG 直播', '하루의 마무리': '一天的结束',
+          '버블': 'Bubble', '프롬': 'Fromm',
+          '레코딩로그': '录音日志', '메이킹': '制作', '뮤직비디오': 'MV', '버킷리스트': '清单', '비하인드': '花絮', '쇼츠': 'Shorts', '스페셜클립': '特别片段', '승캠': '承Cam', '승협이': '承协', '엔킷리스트': '招募', '커버곡': '翻唱', '합주일지': '合奏日志',
+          '개인 인스타그램': '个人IG', '공식 블로그': '官方博客', '공식 인스타그램': '官方IG', '공식 카페': '官咖', '공식 트위터': '官方推特', '릴스': 'Reels',
+          '라디오': '广播', '방송/예능': '综艺节目', '웹예능/웹컨텐츠': '网络综艺', '인터뷰': '采访', '잡지/화보': '杂志/画报',
+          '목격담': '目击', '모음집': '合集', '백업': '备份', '연말결산': '年终结算',
+          '이마키스': '额头吻', '질투': '嫉妒', '친지마': '亲其马', '투샷': '合影', '셀카': '自拍', '하크잖': '爱心', '커플템': '情侣款'
         }
       },
       jp: {
         archive: "アーカイブ", keyword: "キーワード", calendar: "カレンダー",
         listAdmin: "リスト", calAdmin: "カレンダー", importAdmin: "インポート",
-        searchPlaceholder: "キーワードを入力...", searchHint: "💡 検索例: 2023-05-22, ライブ, 動画",
+        searchPlaceholder: "キーワードを入力...", searchHint: "💡 추천 검색: 2023-05-22, ㅇㅇㅎ, 하크잖",
         all: "すべて", total: "合計", unit: "件", more: "もっと見る (+)", latest: "最新順", oldest: "古い順",
         empty: "記録がありません。", add: "+ 追加", save: "保存", cancel: "Cancel", edit: "編集", delete: "삭제",
         year: "年", month: "月", daySun: "日", dayMon: "月", dayTue: "화", dayWed: "水", dayThu: "목", dayFri: "金", daySat: "土",
         importTitle: "外部データ管理", importId: "アカウントフィルタ (任意)", importStart: "開始日", importEnd: "終了日", importBtn: "Rawデータ取得",
-        postBtn: "投稿する", extract: "抽出", landingLink: "リンク", thumbUrl: "サムサムネイル URL", title: "タイトル", date: "日付", mainCat: "大分類", subCat: "小分類", keywordCat: "キーワード",
+        postBtn: "投稿する", extract: "抽出", landingLink: "リンク", thumbUrl: "サムネイル URL", title: "タイトル", date: "日付", mainCat: "大分類", subCat: "小分類", keywordCat: "キーワード",
         passwordTitle: "管理者認証", passwordPlaceholder: "パスワードを入力", passwordBtn: "確認", passwordError: "パスワード가 틀렸습니다.",
         goToMain: "メインへ戻る",
         guideTitle: "アーカイブ利用ガイド",
-        guideSearch: "日付(2024-01-01)、頭文字、キーワードで検索が可能です。",
+        guideSearch: "日付(2024-01-01)、頭文字、キーワードで検索が可能です。 (韓国語で検索してください)",
         guideCalendar: "点が表示された日付をクリックすると、その日の記録をまとめて表示します。",
         guideFilter: "カテゴリーと詳細分類を通じて、目的の動画を素早く見つけてください。 (上部のメニューは横にスクロールできます。)",
         guideContact: "エラーおよびその他のお問い合わせは @Penta_1031 までお願いいたします。",
         scrollHint: "横にスワイプして表示",
         categories: {
-          '무대영상': 'ステージ', '라이브': 'ライブ', '유튜브': 'YouTube', '미디어': 'メディア', 'SNS': 'SNS', '메시지': 'メッセージ', '기타': 'その他', '전체 보기': 'すべて表示',
-          '음악방송': '音楽番組', '직캠': 'ファンカム', '콘서트': 'コンサート', 'フェ스': 'フェ스', '学祭': '学祭', '路上ライブ': '路上ライブ', 'ショーケース': 'ショーケース', 'ファン미': 'ファンミ', 'サイン会': 'サイン会', '空港/出勤': '空港/出勤', '海外ツアー': '海外ツアー', 'KINGDOM': 'KINGDOM',
-          '1日の締め': '1日の締め', '承协ライブ': '承协ライブ', '承协ライブ2': '承协ライブ2', '話そう': '話そう', '個人ライブ': '個人ライブ', '団体ライブ': '団体ライブ', 'インスタライブ': 'インスタライブ', '他ライブ': '他ライブ',
-          '뮤직비디오': 'MV', 'メイキング': 'メイキング', '비하인드': '비하인드', 'レコーディング': 'レコーディング', '承Cam': '承Cam', '승협이': '承协', '合奏日誌': '合奏日誌', 'カバー': 'カバー', '特別映像': '特別映像', 'Shorts': 'Shorts', '募集中': '募集中', 'リスト': 'リスト',
-          'バラエティ': 'バラエティ', '라디오': 'ラジオ', '인터뷰': 'インタビュー', '雑誌/グラビア': '雑誌/グラビア', 'Web番組': 'Web番組',
-          '公式Twitter': '公式Twitter', '個人IG': '個人IG', '公式IG': '公式IG', 'Reels': 'Reels', 'TikTok': 'TikTok', 'ファンカフェ': 'ファンカフェ', '公式ブログ': '公式ブログ',
-          '버블': 'Bubble', 'Fromm': 'Fromm', '年末精算': '年末精算', 'バックアップ': 'バックアップ', '目撃談': '目撃談',
-          'まとめ': 'まとめ', 'おでこキス': 'おでこキス', '嫉妬': '嫉妬', 'チンジマ': 'チンジマ', 'ツーショット': 'ツーショット', '自撮り': '自撮り', 'ハート': 'ハート', 'ペア': 'ペア'
+          '전체 보기': 'すべて表示', '무대영상': 'ステージ', '라이브': 'ライブ', '메시지': 'メッセージ', '유튜브': 'YouTube', 'SNS': 'SNS', '미디어': 'メディア', '기타': 'その他',
+          '공항/퇴근길': '空港/出勤', '대학축제': '学祭', '버스킹': '路上ライブ', '쇼케이스': 'ショーケース', '음악방송': '音楽番組', '직캠': 'ファンカム', '콘서트': 'コンサート', '킹덤': 'KINGDOM', '팬미팅': 'ファンミ', '팬싸인회': 'サイン会', '페스티벌': 'フェス', '해외투어': '海外ツアー',
+          '개인 라이브': '個人ライブ', '기타 라이브': '他ライブ', '단체 라이브': '団体ライブ', '승구리당당': '承协ライブ2', '승협이 라이브': '承协ライブ', '우리 얘기 좀 합시다': '話そう', '인스타그램 라이브': 'インスタライブ', '하루의 마무리': '1日の締め',
+          '버블': 'Bubble', '프롬': 'Fromm',
+          '레코딩로그': 'レコーディング', '메이킹': 'メイキング', '뮤직비디오': 'MV', '버킷리스트': 'リスト', '비하인드': 'ビハインド', '쇼츠': 'Shorts', '스페셜클립': '特別映像', '승캠': '承Cam', '승협이': '承协', '엔킷리스트': '募集中', '커버곡': 'カバー', '합주일지': '合奏日誌',
+          '개인 인스타그램': '個人IG', '공식 블로그': '公式ブログ', '공식 인스타그램': '公式IG', '공식 카페': 'ファンカフェ', '공식 트위터': '公式Twitter', '릴스': 'Reels',
+          '라디오': 'ラジオ', '방송/예능': 'バラエティ', '웹예능/웹컨텐츠': 'Web番組', '인터뷰': 'インタビュー', '잡지/화보': '雑誌/グラビア',
+          '목격담': '目撃談', '모음집': 'まとめ', '백업': 'バックアップ', '연말결산': '年末精算',
+          '이마키스': 'おでこキス', '질투': '嫉妬', '친지마': 'チンジマ', '투샷': 'ツーショット', '셀카': '自撮り', '하크잖': 'ハート', '커플템': 'ペア'
         }
       }
     };
@@ -1284,3 +1301,5 @@
   </script>
 </body>
 </html>
+
+
