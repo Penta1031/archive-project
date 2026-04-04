@@ -107,13 +107,13 @@
 
     // ✅ 최종 이미지 데이터 기반 카테고리 업데이트
     const CATEGORIES = {
-      '무대영상': ['음악방송', '직캠', '콘서트', '페스티벌', '대학축제', '버스킹', '쇼케이스', '팬미팅', '팬싸인회', '공항/퇴근길', '해외투어', '킹덤'],
-      '라이브': ['하루의 마무리', '승협이 라이브', '승구리당당', '우리 얘기 좀 합시다', '개인 라이브', '단체 라이브', '인스타그램 라이브', '기타 라이브'],
-      '유튜브': ['뮤직비디오', '메이킹', '비하인드', '레코딩로그', '승캠', '승협이', '합주일지', '커버곡', '스페셜클립', '쇼츠', '엔킷리스트', '버킷리스트'],
-      '미디어': ['방송/예능', '라디오', '인터뷰', '잡지/화보', '웹예능/웹컨텐츠'],
-      'SNS': ['공식 트위터', '개인 인스타그램', '공식 인스타그램', '릴스', '틱톡', '공식 카페', '공식 블로그'],
+      '무대영상': ['공항/퇴근길', '대학축제', '버스킹', '쇼케이스', '음악방송', '직캠', '콘서트', '킹덤', '팬미팅', '팬싸인회', '페스티벌', '해외투어'],
+      '라이브': ['개인 라이브', '기타 라이브', '단체 라이브', '승구리당당', '승협이 라이브', '우리 얘기 좀 합시다', '인스타그램 라이브', '하루의 마무리'],
       '메시지': ['버블', '프롬'],
-      '기타': ['연말결산', '기타', '백업', '목격담', '모음집']
+      '유튜브': ['레코딩로그', '메이킹', '뮤직비디오', '버킷리스트', '비하인드', '쇼츠', '스페셜클립', '승캠', '승협이', '엔킷리스트', '커버곡', '합주일지'],
+      'SNS': ['개인 인스타그램', '공식 블로그', '공식 인스타그램', '공식 카페', '공식 트위터', '릴스'],
+      '미디어': ['라디오', '방송/예능', '웹예능/웹컨텐츠', '인터뷰', '잡지/화보'],
+      '기타': ['기타', '목격담', '모음집', '백업', '연말결산']
     };
 
     const MAIN_TABS_LIST = ['전체 보기', ...Object.keys(CATEGORIES)];
@@ -136,7 +136,7 @@
         guideTitle: "아카이브 이용 가이드",
         guideSearch: "날짜(2024-01-01), 초성, 키워드로 검색이 가능합니다.",
         guideCalendar: "점이 표시된 날짜를 클릭하면 해당 날짜의 기록을 모아볼 수 있습니다.",
-        guideFilter: "카테고리와 상세 분류를 통해 원하는 영상을 빠르게 찾아보세요.",
+        guideFilter: "카테고리와 상세 분류를 통해 원하는 영상을 빠르게 찾아보세요. (상단 카테고리 메뉴를 옆으로 스크롤할 수 있습니다.)",
         guideContact: "오류 및 기타 문의사항은 @Penta_1031로 문의해 주세요.",
         scrollHint: "옆으로 넘겨보세요",
         categories: {
@@ -164,7 +164,7 @@
         guideTitle: "Archive User Guide",
         guideSearch: "You can search by date (2024-01-01), initials, or keywords.",
         guideCalendar: "Click on dates with dots to see records for that day.",
-        guideFilter: "Quickly find videos through categories and detailed filters.",
+        guideFilter: "Quickly find videos through categories and detailed filters. (You can scroll the top menus horizontally.)",
         guideContact: "For errors and other inquiries, please contact @Penta_1031.",
         scrollHint: "Swipe to see more",
         categories: {
@@ -192,7 +192,7 @@
         guideTitle: "存档使用指南",
         guideSearch: "您可以通过日期(2024-01-01)、首字母或关键词进行搜索。",
         guideCalendar: "点击带点的日期即可查看当天的记录。",
-        guideFilter: "通过类别和详细筛选快速找到您想要的视频。",
+        guideFilter: "通过类别和详细筛选快速找到您想要的视频。 (您可以横向滑动顶部菜单。)",
         guideContact: "错误及其他咨询请联系 @Penta_1031。",
         scrollHint: "向侧边滑动查看更多",
         categories: {
@@ -220,7 +220,7 @@
         guideTitle: "アーカイブ利用ガイド",
         guideSearch: "日付(2024-01-01)、頭文字、キーワードで検索が可能です。",
         guideCalendar: "点が表示された日付をクリックすると、その日の記録をまとめて表示します。",
-        guideFilter: "カテゴリーと詳細分類を通じて、目的の動画を素早く見つけてください。",
+        guideFilter: "カテゴリーと詳細分類を通じて、目的の動画を素早く見つけてください。 (上部のメニューは横にスクロールできます。)",
         guideContact: "エラーおよびその他のお問い合わせは @Penta_1031 までお願いいたします。",
         scrollHint: "横にスワイプして表示",
         categories: {
@@ -1205,9 +1205,6 @@
           keywordData = getSortedData(getSearchFilteredData(keywordData));
           const visibleData = keywordData.slice(0, state.displayLimit);
           contentHTML = `
-            <div class="flex justify-end mb-1 pr-1">
-              <span class="text-[8px] text-neutral-500 flex items-center gap-0.5 font-bold tracking-tight">${T.scrollHint} <i data-lucide="arrow-right" class="w-2.5 h-2.5"></i></span>
-            </div>
             <div class="flex gap-2 overflow-x-auto scrollbar-hide mb-4 pb-1">
               ${['전체', ...KEYWORDS].map(kw => `<button onclick="setKeyword('${kw}')" class="whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold border ${state.activeKeyword === kw ? 'bg-neutral-800 border-neutral-600 text-white' : 'border-transparent text-gray-500'}">${kw === '전체' ? T.all : getT(kw)}</button>`).join('')}
             </div>
@@ -1220,9 +1217,6 @@
           archiveData = getSortedData(getSearchFilteredData(archiveData));
           const visibleData = archiveData.slice(0, state.displayLimit);
           contentHTML = `
-            <div class="flex justify-end mb-1 pr-1">
-              <span class="text-[8px] text-neutral-500 flex items-center gap-0.5 font-bold tracking-tight">${T.scrollHint} <i data-lucide="arrow-right" class="w-2.5 h-2.5"></i></span>
-            </div>
             <div class="flex gap-2 overflow-x-auto scrollbar-hide mb-3 pb-1">${MAIN_TABS_LIST.map(tab => `<button onclick="setSubTab('${tab}')" class="whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold border ${state.activeSubTab === tab ? 'bg-neutral-800 border-neutral-600 text-white' : 'border-transparent text-gray-500'}">${getT(tab)}</button>`).join('')}</div>
             ${state.activeSubTab !== '전체 보기' ? `
               <div class="mb-6 -mt-1">
